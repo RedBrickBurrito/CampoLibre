@@ -1,0 +1,126 @@
+"use client"
+
+import { useState, ChangeEvent, MouseEventHandler} from "react"
+import { signIn } from "next-auth/react"
+import { toast } from "react-hot-toast"
+import { useRouter } from "next/router"
+import FormInput from "@ui/Input/InputForm"
+
+interface SignInUserData {
+  email: string
+  password: string
+}
+
+export default function Login() {
+  const [data, setData] = useState<SignInUserData>({
+    email: "",
+    password: "",
+  })
+  const router = useRouter()
+  const [errors, setErrors] = useState<Partial<SignInUserData>>({});
+
+  const loginUser = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    signIn('credentials', {...data, redirect: false})
+      .then((callback) => {
+        if(callback?.error) {
+          toast.error(callback.error)
+        }
+
+        if(callback?.ok && !callback.error) {
+          toast.success('Inicio de sesión exitoso')
+          router.push('/')
+        }
+      })
+  }
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+
+  return (
+    <>
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+          <img
+            className="mx-auto h-10 w-auto"
+            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+            alt="Campo Libre"
+          />
+          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            Ingresa a tu cuenta
+          </h2>
+        </div>
+
+        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+          <form className="space-y-4" onSubmit={loginUser}>
+            <div className="flex flex-col space-y-4">
+                <button
+                  onClick={() => signIn('google')}
+                  className="px-4 py-2 border flex border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150 gap-5 items-center">
+                  <img className="w-8 h-8" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo"/>
+                  Iniciar sesión con Google
+                </button>
+                <div className="relative flex py-5 items-center">
+                  <div className="flex-grow border-t border-gray-400"></div>
+                  <span className="flex-shrink mx-4 text-gray-400">o</span>
+                  <div className="flex-grow border-t border-gray-400"></div>
+              </div>
+            </div>
+            <FormInput
+              label="Correo electrónico"
+              id="email"
+              type="email"
+              required
+              value={data.email}
+              error={errors.email}
+              onChange={handleChange}
+            />
+            <div>
+              <div className="flex items-center justify-between">
+                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                  Contraseña
+                </label>
+                <div className="text-sm">
+                  <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
+                    ¿Olvidaste tu contraseña?
+                  </a>
+                </div>
+              </div>
+              <div className="mt-2">
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  value={data.password}
+                  onChange={(e) => setData({ ...data, password: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Iniciar Sesión
+              </button>
+            </div>
+            <p className="mt-10 text-center text-sm text-gray-500">
+            ¿Aún no estás registrado?{' '}
+            <a href="http://localhost:3000/register" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+              Regístrate
+            </a>
+          </p>
+          </form>
+        </div>
+      </div>
+    </>
+  )
+}

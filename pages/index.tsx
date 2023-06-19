@@ -1,13 +1,12 @@
-import { useSession } from "next-auth/react"
-
+import { useSession, signOut } from "next-auth/react"
 
 export default function Home() {
-  const {data: session} = useSession()
+  const { data: session } = useSession()
 
   return (
     <>
       <h1>Home</h1>
-      <pre>{JSON.stringify(session)}</pre>
+      <button onClick={() => signOut()}>Cerrar Sesión</button>
     </>
   )
 }

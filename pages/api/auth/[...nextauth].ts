@@ -1,19 +1,20 @@
 import NextAuth from "next-auth/next"
 import { NextAuthOptions } from "next-auth"
 import prisma from "../../../libs/prisma"
+import { toast } from "react-hot-toast"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 import AppleProvider from "next-auth/providers/apple"
+import bcrypt from "bcrypt"
 
 interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
+  id: string
+  email: string
+  name: string
 }
 
-export const authOptions: NextAuthOptions  = {
+export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
@@ -27,28 +28,40 @@ export const authOptions: NextAuthOptions  = {
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        email: {label: "Email", type: "text"},
-        password: {label: "Password", type: "password"},
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: Record<"email" | "password", string> | undefined): Promise<User | null> {
-        if(!credentials) {
-          return null;
+      async authorize(credentials: Record<"email" | "password", string> | undefined): Promise<User> {
+        if(!credentials?.email || !credentials.password) {
+          throw new Error('Introduzca una dirección de correo electrónico y una contraseña')
         }
 
-        const user: User = {
-          id: "1",
-          email: "eddy@gmail.com",
-          firstName: "Eduardo",
-          lastName: "Almanza",
-        };
+        const user = await prisma.user.findUnique({
+          where: {
+            email: credentials.email
+          }
+        });
+
+        // check that user doesn't have a hashedPassword
+        if(!user || !user.hashedPassword) {
+          throw new Error('No se ha encontrado ningún usuario')
+        }
+
+        const passwordMatch = await bcrypt.compare(credentials.password, user.hashedPassword)
+
+        if(!passwordMatch) {
+          throw new Error('Correo electrónico o contraseña incorrectos')
+        }
 
         return user;
+
       },
     }),
   ],
   callbacks: {
-    session({ session, token, user}) {
-      return session
+    async redirect({ url, baseUrl }) { 
+      toast.success("El usuario ha sido registrado");
+      return baseUrl 
     }
   },
   secret: process.env.SECRET,
@@ -58,4 +71,4 @@ export const authOptions: NextAuthOptions  = {
   debug: process.env.NODE_ENV === "development",
 }
 
-export default NextAuth(authOptions);
+export default NextAuth(authOptions)
