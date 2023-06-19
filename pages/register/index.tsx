@@ -3,80 +3,75 @@
 import { useState, FormEvent, ChangeEvent } from "react"
 import axios from "axios"
 import { toast } from "react-hot-toast"
+import { FormikConfig, useFormik } from "formik"
 import { useRouter } from "next/router"
 import FormInput from "@ui/Input/InputForm"
+import * as Yup from "yup"
 
-interface RegisterUserData {
+interface RegisterFormValues {
   firstName: string
   lastName: string
   email: string
   phone: string
   company: string
   password: string
+  confirmPassword: string
 }
 
+const validationSchema = Yup.object({
+  firstName: Yup.string().max(20, "Debe tener 20 caracteres o menos").required("Requerido"),
+  lastName: Yup.string().max(25, "Debe tener 25 caracteres o menos").required("Requerido"),
+  email: Yup.string().email("Correo electrónico no válido").required("Requerido"),
+  phone: Yup.string()
+    .matches(/^[0-9]+$/, "Deben ser sólo dígitos")
+    .min(5, "Debe tener al menos 5 dígitos")
+    .max(12, "Debe tener máximo 12 dígitos"),
+  company: Yup.string().max(35, "Debe tener 35 caracteres o menos").required("Requerido"),
+  password: Yup.string()
+    .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, "Mínimo ocho caracteres, al menos una letra y un número")
+    .max(45, "Debe tener máximo 45 dígitos")
+    .required("Requerido"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), undefined], "Las contraseñas deben coincidir")
+    .required("Requerido"),
+})
+
 export default function Register() {
-  const [data, setData] = useState<RegisterUserData>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    company: "",
-    password: "",
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+
+  const formik = useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      company: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validationSchema,
+    onSubmit: async (data) => {
+      try {
+        setLoading(true)
+        await axios.post("/api/register", data)
+        toast.success("El usuario ha sido registrado")
+        router.push("/login")
+      } catch (error) {
+        toast.error("¡Algo salió mal!")
+      } finally {
+        setLoading(false)
+      }
+    },
   })
 
-  const [errors, setErrors] = useState<Partial<RegisterUserData>>({});
-  const router = useRouter();
-
-  const validateForm = (): boolean => {
-    const errors: Partial<RegisterUserData> = {};
-
-    if (!data.firstName.trim()) {
-      errors.firstName = "El nombre es requerido";
+  const renderErrorMessage = (field: keyof RegisterFormValues) => {
+    if (formik.touched[field] && formik.errors[field]) {
+      return <div className="text-sm text-red-600">{formik.errors[field]}</div>
     }
 
-    if (!data.lastName.trim()) {
-      errors.lastName = "El apellido es requerido";
-    }
-
-    if (!data.email.trim()) {
-      errors.email = "El correo electrónico es requerido";
-    }
-
-    if (!data.phone.trim()) {
-      errors.phone = "El número de teléfono es requerido";
-    }
-
-    if (!data.company.trim()) {
-      errors.company = "El nombre de la empresa es requerido";
-    }
-
-    if (!data.password.trim()) {
-      errors.password = "La contraseña es requerida";
-    }
-
-    setErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const registerUser = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    if (validateForm()) {
-      try {
-        await axios.post("/api/register", data);
-        toast.success("El usuario ha sido registrado");
-        router.push("/login");
-      } catch (error) {
-        toast.error("¡Algo salió mal!");
-      }
-    }
-  };
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setData((prevData) => ({ ...prevData, [name]: value }));
-  };
+    return null
+  }
 
   return (
     <>
@@ -93,67 +88,77 @@ export default function Register() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" onSubmit={registerUser}>
+          <form className="space-y-6" onSubmit={formik.handleSubmit}>
             <FormInput
               label="Nombre"
               id="firstName"
               type="text"
-              value={data.firstName}
-              error={errors.firstName}
-              onChange={handleChange}
+              value={formik.values.firstName}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
+            {renderErrorMessage("firstName")}
             <FormInput
               label="Apellido"
               id="lastName"
               type="text"
-              required
-              value={data.lastName}
-              error={errors.lastName}
-              onChange={handleChange}
+              value={formik.values.lastName}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
+            {renderErrorMessage("lastName")}
             <FormInput
               label="Correo electrónico"
               id="email"
               type="email"
-              required
-              value={data.email}
-              error={errors.email}
-              onChange={handleChange}
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
+            {renderErrorMessage("email")}
             <FormInput
               label="Número de teléfono"
               id="phone"
               type="text"
-              required
-              value={data.phone}
-              error={errors.phone}
-              onChange={handleChange}
+              value={formik.values.phone}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
+            {renderErrorMessage("phone")}
             <FormInput
               label="Nombre de la empresa"
               id="company"
               type="text"
-              required
-              value={data.company}
-              error={errors.company}
-              onChange={handleChange}
+              value={formik.values.company}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
+            {renderErrorMessage("company")}
             <FormInput
               label="Contraseña"
               id="password"
               type="password"
-              required
-              value={data.password}
-              error={errors.password}
-              onChange={handleChange}
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
-
+            {renderErrorMessage("password")}
+            <FormInput
+              label="Confirmar contraseña"
+              id="confirmPassword"
+              type="password"
+              value={formik.values.confirmPassword}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {renderErrorMessage("confirmPassword")}
             <div>
               <button
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                disabled={loading}
               >
-                Registrarse
+                {loading ? "Registrando..." : "Registrarse"}
               </button>
             </div>
           </form>

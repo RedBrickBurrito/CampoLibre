@@ -32,37 +32,35 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials: Record<"email" | "password", string> | undefined): Promise<User> {
-        if(!credentials?.email || !credentials.password) {
-          throw new Error('Introduzca una dirección de correo electrónico y una contraseña')
+        if (!credentials?.email || !credentials.password) {
+          throw new Error("Introduzca una dirección de correo electrónico y una contraseña")
         }
 
         const user = await prisma.user.findUnique({
           where: {
-            email: credentials.email
-          }
-        });
+            email: credentials.email,
+          },
+        })
 
         // check that user doesn't have a hashedPassword
-        if(!user || !user.hashedPassword) {
-          throw new Error('No se ha encontrado ningún usuario')
+        if (!user || !user.hashedPassword) {
+          throw new Error("No se ha encontrado ningún usuario")
         }
 
         const passwordMatch = await bcrypt.compare(credentials.password, user.hashedPassword)
 
-        if(!passwordMatch) {
-          throw new Error('Correo electrónico o contraseña incorrectos')
+        if (!passwordMatch) {
+          throw new Error("Correo electrónico o contraseña incorrectos")
         }
 
-        return user;
-
+        return user
       },
     }),
   ],
   callbacks: {
-    async redirect({ url, baseUrl }) { 
-      toast.success("El usuario ha sido registrado");
-      return baseUrl 
-    }
+    async redirect({ url, baseUrl }) {
+      return baseUrl
+    },
   },
   secret: process.env.SECRET,
   session: {

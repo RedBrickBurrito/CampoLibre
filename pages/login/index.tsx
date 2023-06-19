@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, ChangeEvent, MouseEventHandler} from "react"
+import { useState, ChangeEvent, MouseEventHandler } from "react"
 import { signIn } from "next-auth/react"
 import { toast } from "react-hot-toast"
 import { useRouter } from "next/router"
@@ -17,29 +17,26 @@ export default function Login() {
     password: "",
   })
   const router = useRouter()
-  const [errors, setErrors] = useState<Partial<SignInUserData>>({});
 
   const loginUser = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    signIn('credentials', {...data, redirect: false})
-      .then((callback) => {
-        if(callback?.error) {
-          toast.error(callback.error)
-        }
+    signIn("credentials", { ...data, redirect: false }).then((callback) => {
+      if (callback?.error) {
+        toast.error(callback.error)
+      }
 
-        if(callback?.ok && !callback.error) {
-          toast.success('Inicio de sesión exitoso')
-          router.push('/')
-        }
-      })
+      if (callback?.ok && !callback.error) {
+        toast.success("Inicio de sesión exitoso")
+        router.push("/")
+      }
+    })
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
+    const { name, value } = e.target
+    setData((prevData) => ({ ...prevData, [name]: value }))
+  }
 
   return (
     <>
@@ -58,16 +55,22 @@ export default function Login() {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-4" onSubmit={loginUser}>
             <div className="flex flex-col space-y-4">
-                <button
-                  onClick={() => signIn('google')}
-                  className="px-4 py-2 border flex border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150 gap-5 items-center">
-                  <img className="w-8 h-8" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo"/>
-                  Iniciar sesión con Google
-                </button>
-                <div className="relative flex py-5 items-center">
-                  <div className="flex-grow border-t border-gray-400"></div>
-                  <span className="flex-shrink mx-4 text-gray-400">o</span>
-                  <div className="flex-grow border-t border-gray-400"></div>
+              <button
+                onClick={() => signIn("google")}
+                className="flex items-center gap-5 rounded-lg border border-slate-200 px-4 py-2 text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow"
+              >
+                <img
+                  className="h-8 w-8"
+                  src="https://www.svgrepo.com/show/475656/google-color.svg"
+                  loading="lazy"
+                  alt="google logo"
+                />
+                Iniciar sesión con Google
+              </button>
+              <div className="relative flex items-center py-5">
+                <div className="flex-grow border-t border-gray-400"></div>
+                <span className="mx-4 flex-shrink text-gray-400">o</span>
+                <div className="flex-grow border-t border-gray-400"></div>
               </div>
             </div>
             <FormInput
@@ -76,7 +79,6 @@ export default function Login() {
               type="email"
               required
               value={data.email}
-              error={errors.email}
               onChange={handleChange}
             />
             <div>
@@ -113,11 +115,14 @@ export default function Login() {
               </button>
             </div>
             <p className="mt-10 text-center text-sm text-gray-500">
-            ¿Aún no estás registrado?{' '}
-            <a href="http://localhost:3000/register" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-              Regístrate
-            </a>
-          </p>
+              ¿Aún no estás registrado?{" "}
+              <a
+                href="http://localhost:3000/register"
+                className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+              >
+                Regístrate
+              </a>
+            </p>
           </form>
         </div>
       </div>

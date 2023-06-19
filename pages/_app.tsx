@@ -1,18 +1,20 @@
 import "../styles/tailwind.css"
 import { SessionProvider } from "next-auth/react"
-import ToasterContext from "context/ToasterContext"
 
 import { AppProps } from "next/app"
 import { Session } from "next-auth"
+import dynamic from "next/dynamic"
 
 interface MyAppProps extends AppProps {
   session: Session
 }
 
 function MyApp({ Component, pageProps, session }: MyAppProps) {
+  const ToastComponent = dynamic(() => import("context/ToasterContext"), { ssr: false })
+
   return (
     <SessionProvider session={session}>
-      <ToasterContext />
+      <ToastComponent />
       <Component {...pageProps} />
     </SessionProvider>
   )
