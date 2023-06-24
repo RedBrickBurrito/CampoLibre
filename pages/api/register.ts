@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt"
 import prisma from "libs/prisma"
 import { NextApiRequest, NextApiResponse } from "next"
-import { NextResponse } from "next/server"
 
 interface RegisterRequestBody {
   firstName: string

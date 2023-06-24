@@ -21,6 +21,6 @@
       "@ui/*": ["./components/ui/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.mjs", "next-env.d.ts", "types/**/*.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.mjs", "next-env.d.ts", "types/**/*.ts", "**/*.ts", "**/*.tsx, test/**/*.ts"],
   "exclude": ["node_modules"]
 }
