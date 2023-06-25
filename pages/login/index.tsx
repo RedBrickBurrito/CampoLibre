@@ -1,16 +1,30 @@
+// Login.tsx - Component for user login
+// This component allows users to log in to the system using their email and password or a provider.
+
 "use client"
 
-import { useState, ChangeEvent, MouseEventHandler } from "react"
+import { useState, ChangeEvent } from "react"
 import { signIn } from "next-auth/react"
 import { toast } from "react-hot-toast"
 import { useRouter } from "next/router"
 import FormInput from "@ui/Input/InputForm"
+
+// Dependencies:
+// - react: Used for building the user interface.
+// - react-hot-toast: Used for displaying toast notifications.
+// - next/router: Used for programmatic navigation between pages.
+// - next-auth/react: This function is used for initiating the sign-in process and is provided by the NextAuth.js library.
+// - @ui/Input/InputForm: A custom UI component for rendering form input fields.
 
 interface SignInUserData {
   email: string
   password: string
 }
 
+/**
+ * Login Component
+ * Renders a login form and handles user authentication.
+ */
 export default function Login() {
   const [data, setData] = useState<SignInUserData>({
     email: "",
@@ -18,6 +32,10 @@ export default function Login() {
   })
   const router = useRouter()
 
+  /**
+   * loginUser
+   * Handles form submission and authenticates the user.
+   */
   const loginUser = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -33,6 +51,10 @@ export default function Login() {
     })
   }
 
+  /**
+   * handleChange
+   * Handles input change and updates the form data.
+   */
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setData((prevData) => ({ ...prevData, [name]: value }))

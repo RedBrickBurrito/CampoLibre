@@ -1,6 +1,6 @@
-import bcrypt from "bcrypt"
-import prisma from "libs/prisma"
-import { NextApiRequest, NextApiResponse } from "next"
+import bcrypt from "bcrypt" // Import bcrypt for password hashing
+import prisma from "libs/prisma" // Import Prisma for data storage
+import { NextApiRequest, NextApiResponse } from "next" // Import Next.js types for API handling
 
 interface RegisterRequestBody {
   firstName: string
@@ -11,6 +11,9 @@ interface RegisterRequestBody {
   password: string
 }
 
+/**
+ * Handles the registration process for a new user.
+ */
 export default async function POST(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === "POST") {
     const body = (await request.body) as RegisterRequestBody

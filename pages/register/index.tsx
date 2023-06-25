@@ -1,12 +1,24 @@
+// Register.tsx - Component for user registration
+// This component allows users to create an account by providing their personal information and registering with the system.
+
 "use client"
 
-import { useState, FormEvent, ChangeEvent } from "react"
+import { useState } from "react"
 import axios from "axios"
 import { toast } from "react-hot-toast"
-import { FormikConfig, useFormik } from "formik"
+import { useFormik } from "formik"
 import { useRouter } from "next/router"
 import FormInput from "@ui/Input/InputForm"
 import * as Yup from "yup"
+
+// Dependencies:
+// - react: Used for building the user interface.
+// - axios: Used for making HTTP requests to the server.
+// - react-hot-toast: Used for displaying toast notifications.
+// - formik: Used for managing form state and validation.
+// - next/router: Used for programmatic navigation between pages.
+// - @ui/Input/InputForm: A custom UI component for rendering form input fields.
+// - Yup: A validation library for defining and validating form schemas.
 
 interface RegisterFormValues {
   firstName: string
@@ -36,10 +48,18 @@ const validationSchema = Yup.object({
     .required("Requerido"),
 })
 
+/**
+ * Register Component
+ * Renders a user registration form and handles form submission.
+ */
 export default function Register() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
+  // formik.handleSubmit
+  // Handles the form submission by sending a registration request to the server.
+  // If the submission is successful, a success toast is displayed, and the user is redirected to the login page.
+  // If an error occurs, an error toast is displayed.
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -65,6 +85,8 @@ export default function Register() {
     },
   })
 
+  // renderErrorMessage
+  // Renders an error message for the specified form field if it has been touched and has an error.
   const renderErrorMessage = (field: keyof RegisterFormValues) => {
     if (formik.touched[field] && formik.errors[field]) {
       return <div className="text-sm text-red-600">{formik.errors[field]}</div>
