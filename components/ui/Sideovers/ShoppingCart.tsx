@@ -1,45 +1,59 @@
-import { Fragment, useState } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import Image from 'next/image';
+import { Fragment, useState } from "react"
+import { Dialog, Transition } from "@headlessui/react"
+import { XMarkIcon } from "@heroicons/react/24/outline"
+import Image from "next/image"
 
-type OnCloseFunction = () => void;
+type OnCloseFunction = () => void
 
 interface ShoppingCartProps {
-    onClose: OnCloseFunction;
-  }
+  onClose: OnCloseFunction
+}
+
+interface Products {
+    id: number;
+    name: string;
+    
+}
 
 const products = [
   {
     id: 1,
-    name: 'Throwback Hip Bag',
-    href: '#',
-    color: 'Salmon',
-    price: '$90.00',
+    name: "Throwback Hip Bag",
+    href: "#",
+    color: "Salmon",
+    price: "$90.00",
     quantity: 1,
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg',
-    imageAlt: 'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
+    imageSrc: "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg",
+    imageAlt: "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
   },
   {
     id: 2,
-    name: 'Medium Stuff Satchel',
-    href: '#',
-    color: 'Blue',
-    price: '$32.00',
+    name: "Medium Stuff Satchel",
+    href: "#",
+    color: "Blue",
+    price: "$32.00",
     quantity: 1,
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg',
+    imageSrc: "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg",
     imageAlt:
-      'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
+      "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
   },
   // More products...
 ]
 
-export default function ShoppingCart({onClose} : ShoppingCartProps) {
+export default function ShoppingCart({ onClose }: ShoppingCartProps) {
   const [open, setOpen] = useState(true);
+  const [price, setPrice] = useState(0);
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={() => {setOpen(false); onClose();}}>
+      <Dialog
+        as="div"
+        className="relative z-10"
+        onClose={() => {
+          setOpen(false)
+          onClose()
+        }}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-500"
@@ -73,7 +87,10 @@ export default function ShoppingCart({onClose} : ShoppingCartProps) {
                           <button
                             type="button"
                             className="-m-2 p-2 text-gray-400 hover:text-gray-500"
-                            onClick={() => {setOpen(false); onClose();}}
+                            onClick={() => {
+                              setOpen(false)
+                              onClose()
+                            }}
                           >
                             <span className="sr-only">Cerrar Panel</span>
                             <XMarkIcon className="h-6 w-6" aria-hidden="true" />
@@ -129,7 +146,9 @@ export default function ShoppingCart({onClose} : ShoppingCartProps) {
                         <p>Subtotal</p>
                         <p>$262.00</p>
                       </div>
-                      <p className="mt-0.5 text-sm text-gray-500">Gastos de envío e impuestos calculados en el momento de la compra.</p>
+                      <p className="mt-0.5 text-sm text-gray-500">
+                        Gastos de envío e impuestos calculados en el momento de la compra.
+                      </p>
                       <div className="mt-6">
                         <a
                           href="#"
@@ -140,11 +159,14 @@ export default function ShoppingCart({onClose} : ShoppingCartProps) {
                       </div>
                       <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                         <p>
-                          O 
+                          o&nbsp;
                           <button
                             type="button"
                             className="font-medium text-indigo-600 hover:text-indigo-500"
-                            onClick={() => {setOpen(false); onClose();}}
+                            onClick={() => {
+                              setOpen(false)
+                              onClose()
+                            }}
                           >
                             Continuar Comprando
                             <span aria-hidden="true"> &rarr;</span>
