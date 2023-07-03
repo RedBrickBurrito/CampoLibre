@@ -8,7 +8,6 @@ interface Product {
   imageAlt: string;
   categoryId: string;
   price: number;
-  quantity: number;
   description?: string;
   expirationDate?: Date;
 }

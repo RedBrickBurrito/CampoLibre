@@ -34,14 +34,6 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
     }
   }, []);
 
-  function addToCart(product: Product) {
-    setProducts((prevProducts) => {
-      const updatedProducts = [...prevProducts, product];
-      localStorage.setItem("cart", JSON.stringify(updatedProducts));
-      return updatedProducts;
-    });
-  }
-
   function clearCart() {
     setProducts([]);
     localStorage.removeItem("cart");

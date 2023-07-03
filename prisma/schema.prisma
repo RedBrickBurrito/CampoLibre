@@ -56,12 +56,13 @@ model Product {
   category          Category  @relation(fields: [categoryId], references: [id])
   categoryId        String    @db.ObjectId
   price             Float
-  quantity          Int
   description       String?
   expirationDate    DateTime?
 }
+
 model Category {
   id                String    @id @default(auto()) @map("_id") @db.ObjectId
   name              String
+  
   products          Product[]
 }
