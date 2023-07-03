@@ -1,7 +1,8 @@
-import { Fragment, useState } from "react"
+import { Fragment, useState, useEffect } from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import Image from "next/image"
+
 
 type OnCloseFunction = () => void
 
@@ -9,40 +10,42 @@ interface ShoppingCartProps {
   onClose: OnCloseFunction
 }
 
-interface Products {
-    id: number;
-    name: string;
-    
+interface Product {
+  id: string;
+  name: string;
+  imageSrc: string;
+  imageAlt: string;
+  categoryId: string;
+  price: number;
+  quantity: number;
+  description?: string;
+  expirationDate?: Date;
 }
-
-const products = [
-  {
-    id: 1,
-    name: "Throwback Hip Bag",
-    href: "#",
-    color: "Salmon",
-    price: "$90.00",
-    quantity: 1,
-    imageSrc: "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg",
-    imageAlt: "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
-  },
-  {
-    id: 2,
-    name: "Medium Stuff Satchel",
-    href: "#",
-    color: "Blue",
-    price: "$32.00",
-    quantity: 1,
-    imageSrc: "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg",
-    imageAlt:
-      "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
-  },
-  // More products...
-]
 
 export default function ShoppingCart({ onClose }: ShoppingCartProps) {
   const [open, setOpen] = useState(true);
   const [price, setPrice] = useState(0);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cart");
+    if (storedCart) {
+      setProducts(JSON.parse(storedCart) as Product[]);
+    }
+  }, []);
+
+  function addToCart(product: Product) {
+    setProducts((prevProducts) => {
+      const updatedProducts = [...prevProducts, product];
+      localStorage.setItem("cart", JSON.stringify(updatedProducts));
+      return updatedProducts;
+    });
+  }
+
+  function clearCart() {
+    setProducts([]);
+    localStorage.removeItem("cart");
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -115,11 +118,11 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
                                   <div>
                                     <div className="flex justify-between text-base font-medium text-gray-900">
                                       <h3>
-                                        <a href={product.href}>{product.name}</a>
+                                        <a href="#">{product.name}</a>
                                       </h3>
                                       <p className="ml-4">{product.price}</p>
                                     </div>
-                                    <p className="mt-1 text-sm text-gray-500">{product.color}</p>
+                                    <p className="mt-1 text-sm text-gray-500">null</p>
                                   </div>
                                   <div className="flex flex-1 items-end justify-between text-sm">
                                     <p className="text-gray-500">Cant. {product.quantity}</p>

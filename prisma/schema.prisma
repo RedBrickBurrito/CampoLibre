@@ -51,6 +51,8 @@ enum Role {
 model Product {
   id                String    @id @default(auto()) @map("_id") @db.ObjectId
   name              String
+  imageSrc          String
+  imageAlt          String
   category          Category  @relation(fields: [categoryId], references: [id])
   categoryId        String    @db.ObjectId
   price             Float
