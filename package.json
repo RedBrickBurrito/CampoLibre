@@ -43,6 +43,7 @@
     "@radix-ui/react-tabs": "^1.0.3",
     "@radix-ui/react-toggle-group": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.5",
+    "@reduxjs/toolkit": "^1.9.5",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^9.0.2",
     "@semantic-release/git": "^10.0.1",
@@ -53,6 +54,7 @@
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.3",
     "@types/bcrypt": "^5.0.0",
+    "@types/react-redux": "^7.1.25",
     "@vercel/otel": "^0.3.0",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
@@ -67,6 +69,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
+    "react-redux": "^8.1.1",
     "tailwind-merge": "^1.10.0",
     "yup": "^1.2.0",
     "zod": "^3.21.4"

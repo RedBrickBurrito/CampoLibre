@@ -1,9 +1,31 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { signOut, useSession } from "next-auth/react"
 import ShoppingCart from "@ui/Sideovers/ShoppingCart"
 import Image from 'next/image'
+import { useDispatch, useSelector } from 'react-redux';
+import { setCartItems } from '../../../libs/Store/store';
+
+interface Product {
+  id: string;
+  name: string;
+  imageSrc: string;
+  imageAlt: string;
+  categoryId: string;
+  price: number;
+  description?: string;
+  expirationDate?: Date;
+  quantity?: number;
+}
+
+interface RootState {
+  cart: Product[]
+}
+
+interface NavbarProps {
+  cartItems: Product[];
+}
 
 interface Category {
     id: string;
@@ -148,9 +170,32 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { data: session } = useSession();
   const [cartOpen, setCartOpen] = useState(false);
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state: RootState) => state.cart);
+
+
+  useEffect(() => {
+    const cartItemsFromStorage = localStorage.getItem("cart");
+    console.log("Cart items from storage:", cartItemsFromStorage);
+    if (cartItemsFromStorage !== undefined) {
+      try {
+        const parsedCartItems = JSON.parse(cartItemsFromStorage || '[]');
+        console.log("Parsed cart items:", parsedCartItems);
+        if (Array.isArray(parsedCartItems)) {
+          dispatch(setCartItems(parsedCartItems as Product[]));
+        }
+      } catch (error) {
+        console.error("Error parsing cart items:", error);
+      }
+    }
+  }, [dispatch]);
 
   const handleCartClose = () => {
     setCartOpen(false)
+  }
+
+  const calculateCartItems = () => {
+    return cartItems.length;
   }
 
   return (
@@ -479,12 +524,12 @@ export default function Navbar() {
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
-                  <a className="group -m-2 flex items-center p-2" onClick={() => setCartOpen(true)}>
+                  <a className="group -m-2 flex items-center p-2"  onClick={() => setCartOpen(true)}>
                     <ShoppingBagIcon
                       className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"
                     />
-                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>
+                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">{calculateCartItems()}</span>
                     <span className="sr-only">items in cart, view bag</span>
                   </a>
                 </div>

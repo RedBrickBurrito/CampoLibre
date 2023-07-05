@@ -1,13 +1,15 @@
 import { Fragment, useState, useEffect } from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
+import { useDispatch, useSelector } from 'react-redux';
+import { removeFromCart, incrementQuantity, decrementQuantity, setCartItems} from '../../../libs/Store/store';
 import Image from "next/image"
 
 
 type OnCloseFunction = () => void
 
 interface ShoppingCartProps {
-  onClose: OnCloseFunction
+  onClose: OnCloseFunction;
 }
 
 interface Product {
@@ -17,27 +19,67 @@ interface Product {
   imageAlt: string;
   categoryId: string;
   price: number;
-  quantity: number;
   description?: string;
   expirationDate?: Date;
+  quantity?: number;
 }
 
-export default function ShoppingCart({ onClose }: ShoppingCartProps) {
+interface RootState {
+  cart: Product[]
+}
+
+export default function ShoppingCart({ onClose}: ShoppingCartProps) {
   const [open, setOpen] = useState(true);
-  const [price, setPrice] = useState(0);
-  const [products, setProducts] = useState<Product[]>([]);
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state: RootState) => state.cart);
 
   useEffect(() => {
-    const storedCart = localStorage.getItem("cart");
-    if (storedCart) {
-      setProducts(JSON.parse(storedCart) as Product[]);
+    const cartItemsFromStorage = localStorage.getItem("cart");
+    console.log("Cart items from storage:", cartItemsFromStorage);
+    if (cartItemsFromStorage !== undefined) {
+      try {
+        const parsedCartItems = JSON.parse(cartItemsFromStorage || '[]');
+        console.log("Parsed cart items:", parsedCartItems);
+        if (Array.isArray(parsedCartItems)) {
+          dispatch(setCartItems(parsedCartItems as Product[]));
+        }
+      } catch (error) {
+        console.error("Error parsing cart items:", error);
+      }
     }
-  }, []);
+  }, [dispatch]);
 
-  function clearCart() {
-    setProducts([]);
-    localStorage.removeItem("cart");
-  }
+  const handleDecrementQuantity = (productId: string) => {
+    dispatch(decrementQuantity(productId));
+  };
+
+  const handleIncrementQuantity = (productId: string) => {
+    dispatch(incrementQuantity(productId));
+  };
+
+  const handleRemoveItem = (productId: string) => {
+    dispatch(removeFromCart(productId));
+  };
+
+
+  const calculateCost = (product: Product) => {
+    const cost = (product.price || 0) * (product.quantity || 0);
+    return cost.toFixed(2);
+  };
+
+  const calculateSubtotal = (): number => {
+    let subtotal = 0;
+    for (const product of cartItems) {
+      const cost = parseFloat(calculateCost(product));
+      subtotal += cost;
+    }
+    return parseFloat(subtotal.toFixed(2));
+  };
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cartItems));
+  }, [cartItems]);
+
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -94,9 +136,10 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
                       </div>
 
                       <div className="mt-8">
+                      {cartItems.length > 0 ? (
                         <div className="flow-root">
                           <ul role="list" className="-my-6 divide-y divide-gray-200">
-                            {products.map((product) => (
+                            {cartItems.map((product) => (
                               <li key={product.id} className="flex py-6">
                                 <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                   <img
@@ -112,17 +155,18 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
                                       <h3>
                                         <a href="#">{product.name}</a>
                                       </h3>
-                                      <p className="ml-4">{product.price}</p>
+                                      <p className="ml-4">${calculateCost(product)}</p>
                                     </div>
-                                    <p className="mt-1 text-sm text-gray-500">null</p>
                                   </div>
                                   <div className="flex flex-1 items-end justify-between text-sm">
-                                    <p className="text-gray-500">Cant. {product.quantity}</p>
-
+                                  <button className="px-2 py-0 shadow" onClick={() => handleDecrementQuantity(product.id)}>-</button>
+                                  <p className="text-gray-500">Cant. {product.quantity}</p>
+                                  <button className="px-2 py-0 shadow" onClick={() => handleIncrementQuantity(product.id)}>+</button>
                                     <div className="flex">
                                       <button
                                         type="button"
                                         className="font-medium text-indigo-600 hover:text-indigo-500"
+                                        onClick={() => handleRemoveItem(product.id)}
                                       >
                                         Remover
                                       </button>
@@ -133,13 +177,16 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
                             ))}
                           </ul>
                         </div>
+                      ) : (
+                        <p className="text-gray-500">Cart is empty</p>
+                      )}
                       </div>
                     </div>
 
                     <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                       <div className="flex justify-between text-base font-medium text-gray-900">
                         <p>Subtotal</p>
-                        <p>$262.00</p>
+                        <p>${calculateSubtotal()}</p>
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">
                         Gastos de envío e impuestos calculados en el momento de la compra.
