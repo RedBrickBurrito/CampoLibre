@@ -32,6 +32,7 @@ export default function ShoppingCart({ onClose}: ShoppingCartProps) {
   const [open, setOpen] = useState(true);
   const dispatch = useDispatch();
   const cartItems = useSelector((state: RootState) => state.cart);
+  const isButtonDisabled = cartItems.length === 0;
 
   useEffect(() => {
     const cartItemsFromStorage = localStorage.getItem("cart");
@@ -178,7 +179,7 @@ export default function ShoppingCart({ onClose}: ShoppingCartProps) {
                           </ul>
                         </div>
                       ) : (
-                        <p className="text-gray-500">Cart is empty</p>
+                        <p className="text-gray-500">El carrito esta vacio</p>
                       )}
                       </div>
                     </div>
@@ -191,6 +192,7 @@ export default function ShoppingCart({ onClose}: ShoppingCartProps) {
                       <p className="mt-0.5 text-sm text-gray-500">
                         Gastos de envío e impuestos calculados en el momento de la compra.
                       </p>
+                      {cartItems.length > 0 ? (
                       <div className="mt-6">
                         <a
                           href="#"
@@ -199,6 +201,16 @@ export default function ShoppingCart({ onClose}: ShoppingCartProps) {
                           Pagar
                         </a>
                       </div>
+                      ) : (
+                        <div className="mt-6">
+                          <button
+                            className={`flex items-center w-full justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 ${isButtonDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            disabled={isButtonDisabled}
+                          >
+                            Pagar
+                          </button>
+                        </div>
+                      )}
                       <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                         <p>
                           o&nbsp;
