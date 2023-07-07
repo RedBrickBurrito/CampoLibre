@@ -3,11 +3,11 @@
 
 "use client"
 
-import { useState, ChangeEvent } from "react"
-import { signIn } from "next-auth/react"
-import { toast } from "react-hot-toast"
-import { useRouter } from "next/router"
 import Image from "next/image"
+import { useRouter } from "next/router"
+import { signIn } from "next-auth/react"
+import { ChangeEvent, useState } from "react"
+import { toast } from "react-hot-toast"
 import FormInput from "@ui/Input/InputForm"
 
 // Dependencies:
@@ -108,7 +108,7 @@ export default function Login() {
                   Contraseña
                 </label>
                 <div className="text-sm">
-                  <a href="#" className="font-semibold text-primary-600 hover:text-primary-500">
+                  <a href="/" className="font-semibold text-primary-600 hover:text-primary-500">
                     ¿Olvidaste tu contraseña?
                   </a>
                 </div>

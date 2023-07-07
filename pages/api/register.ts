@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt" // Import bcrypt for password hashing
-import prisma from "libs/prisma" // Import Prisma for data storage
 import { NextApiRequest, NextApiResponse } from "next" // Import Next.js types for API handling
+import prisma from "libs/prisma" // Import Prisma for data storage
 
 interface RegisterRequestBody {
   firstName: string

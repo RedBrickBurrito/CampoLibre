@@ -3,14 +3,14 @@
 
 "use client"
 
-import { useState } from "react"
 import axios from "axios"
-import { toast } from "react-hot-toast"
 import { useFormik } from "formik"
-import { useRouter } from "next/router"
-import FormInput from "@ui/Input/InputForm"
 import Image from "next/image"
+import { useRouter } from "next/router"
+import { useState } from "react"
+import { toast } from "react-hot-toast"
 import * as Yup from "yup"
+import FormInput from "@ui/Input/InputForm"
 
 // Dependencies:
 // - react: Used for building the user interface.

@@ -1,30 +1,10 @@
-import { Fragment, useState, useEffect } from "react"
 import { Dialog, Popover, Tab, Transition } from "@headlessui/react"
 import { Bars3Icon, MagnifyingGlassIcon, ShoppingCartIcon, XMarkIcon } from "@heroicons/react/24/outline"
-import { signOut, useSession } from "next-auth/react"
-import ShoppingCart from "@ui/Sideovers/ShoppingCart"
 import Image from "next/image"
+import { signOut, useSession } from "next-auth/react"
+import { Fragment, useState } from "react"
+import ShoppingCart from "@ui/Sideovers/ShoppingCart"
 import { useCartManagement } from "hooks/useCartManagement"
-
-interface Product {
-  id: string
-  name: string
-  imageSrc: string
-  imageAlt: string
-  categoryId: string
-  price: number
-  description?: string
-  expirationDate?: Date
-  quantity?: number
-}
-
-interface RootState {
-  cart: Product[]
-}
-
-interface NavbarProps {
-  cartItems: Product[]
-}
 
 interface Category {
   id: string
@@ -161,7 +141,7 @@ const navigation: Navigation = {
   ],
 }
 
-function classNames(...classes: String[]) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ")
 }
 
@@ -244,7 +224,13 @@ export default function Navbar() {
                           {category.featured.map((item) => (
                             <div key={item.name} className="group relative text-sm">
                               <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
-                                <img src={item.imageSrc} alt={item.imageAlt} className="object-cover object-center" />
+                                <Image
+                                  src={item.imageSrc}
+                                  alt={item.imageAlt}
+                                  className="object-cover object-center"
+                                  width={1000}
+                                  height={1000}
+                                />
                               </div>
                               <a href={item.href} className="mt-6 block font-medium text-gray-900">
                                 <span className="absolute inset-0 z-10" aria-hidden="true" />
@@ -262,7 +248,6 @@ export default function Navbar() {
                               {section.name}
                             </p>
                             <ul
-                              role="list"
                               aria-labelledby={`${category.id}-${section.id}-heading-mobile`}
                               className="mt-6 flex flex-col space-y-6"
                             >
@@ -315,7 +300,7 @@ export default function Navbar() {
                 </div>
 
                 <div className="border-t border-gray-200 px-4 py-6">
-                  <a href="#" className="-m-2 flex items-center p-2">
+                  <a href="/change-currency" className="-m-2 flex items-center p-2">
                     <Image
                       src="./mexico_flag.svg"
                       alt=""
@@ -352,7 +337,7 @@ export default function Navbar() {
 
               {/* Logo */}
               <div className="ml-4 flex lg:ml-0">
-                <a href="#">
+                <a href="/">
                   <span className="sr-only">Campo Libre</span>
                   <Image className="h-8 w-auto" src="/campo-libre-logo-short.svg" alt="" height={8} width={8} />
                 </a>
@@ -398,10 +383,12 @@ export default function Navbar() {
                                       {category.featured.map((item) => (
                                         <div key={item.name} className="group relative text-base sm:text-sm">
                                           <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
-                                            <img
+                                            <Image
                                               src={item.imageSrc}
                                               alt={item.imageAlt}
                                               className="object-cover object-center"
+                                              width={1000}
+                                              height={1000}
                                             />
                                           </div>
                                           <a href={item.href} className="mt-6 block font-medium text-gray-900">
@@ -421,7 +408,6 @@ export default function Navbar() {
                                             {section.name}
                                           </p>
                                           <ul
-                                            role="list"
                                             aria-labelledby={`${section.name}-heading`}
                                             className="mt-6 space-y-6 sm:mt-4 sm:space-y-4"
                                           >
@@ -478,7 +464,7 @@ export default function Navbar() {
                 </div>
 
                 <div className="hidden lg:ml-8 lg:flex">
-                  <a href="#" className="flex items-center text-gray-700 hover:text-gray-800">
+                  <a href="/" className="flex items-center text-gray-700 hover:text-gray-800">
                     <Image
                       src="./mexico_flag.svg"
                       alt=""
@@ -493,7 +479,7 @@ export default function Navbar() {
 
                 {/* Search */}
                 <div className="flex lg:ml-6">
-                  <a href="#" className="p-2 text-gray-400 hover:text-gray-500">
+                  <a href="/search" className="p-2 text-gray-400 hover:text-gray-500">
                     <span className="sr-only">Buscar</span>
                     <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
                   </a>
@@ -501,7 +487,7 @@ export default function Navbar() {
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
-                  <a className="group -m-2 flex items-center p-2" onClick={() => setCartOpen(true)}>
+                  <button className="group -m-2 flex items-center p-2" onClick={() => setCartOpen(true)}>
                     <ShoppingCartIcon
                       className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"
@@ -510,7 +496,7 @@ export default function Navbar() {
                       {calculateCartItems()}
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>

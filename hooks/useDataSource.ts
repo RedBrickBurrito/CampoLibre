@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
 
 //Type representing a function that fetches a resource asynchronously.
-type GetResourceFunction<T> = () => Promise<T>;
+type GetResourceFunction<T> = () => Promise<T>
 
 /**
  * Custom hook for fetching and managing a data resource.
@@ -10,7 +10,7 @@ type GetResourceFunction<T> = () => Promise<T>;
  * @returns {T | []} The fetched data resource or an empty array.
  */
 export const useDataSource = <T>(getResourceFunction: GetResourceFunction<T>) => {
-  const [resource, setResource] = useState<T | []>([]);
+  const [resource, setResource] = useState<T | []>([])
 
   useEffect(() => {
     /**
@@ -18,14 +18,14 @@ export const useDataSource = <T>(getResourceFunction: GetResourceFunction<T>) =>
      * It runs only once during the component's initial mount.
      */
     const fetchData = async () => {
-      const result = await getResourceFunction();
-      setResource(result);
-    };
+      const result = await getResourceFunction()
+      setResource(result)
+    }
 
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
-  return resource;
-};
+  return resource
+}
 
-export type { GetResourceFunction };
+export type { GetResourceFunction }

@@ -1,11 +1,11 @@
-import Image from "next/image"
-import Navbar from "@ui/Navbar/Navbar"
 import axios from "axios"
+import Image from "next/image"
 import { toast } from "react-hot-toast"
-import { useDispatch, useSelector } from "react-redux"
-import { addToCart, incrementQuantity } from "../libs/Store/store"
-import { useDataSource, GetResourceFunction } from "hooks/useDataSource"
+import { useDispatch } from "react-redux"
+import Navbar from "@ui/Navbar/Navbar"
 import { useCartManagement } from "hooks/useCartManagement"
+import { GetResourceFunction, useDataSource } from "hooks/useDataSource"
+import { addToCart, incrementQuantity } from "../libs/Store/store"
 
 interface Product {
   id: string
