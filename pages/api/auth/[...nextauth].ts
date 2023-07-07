@@ -1,13 +1,13 @@
 // [...nextauth].ts - Default Next Auth route api
 // This component allows authentication using credential or providers.
 
-import NextAuth from "next-auth/next"
-import { NextAuthOptions } from "next-auth"
-import prisma from "../../../libs/prisma"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import bcrypt from "bcrypt"
+import { NextAuthOptions } from "next-auth"
+import NextAuth from "next-auth/next"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
-import bcrypt from "bcrypt"
+import prisma from "../../../libs/prisma"
 
 // Dependencies:
 // - next-auth/next: Responsible for initializing the authentication system.
@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async redirect({ url, baseUrl }) {
+    async redirect({ baseUrl }) {
       return baseUrl
     },
   },

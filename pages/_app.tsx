@@ -1,9 +1,11 @@
 import "../styles/tailwind.css" // Import Tailwind CSS for styling
-import { SessionProvider } from "next-auth/react" // Import NextAuth SessionProvider for session management
 
 import { AppProps } from "next/app" // Import Next.js types for the app component
-import { Session } from "next-auth" // Import NextAuth Session type
 import dynamic from "next/dynamic" // Import dynamic from Next.js for dynamic component import
+import { Session } from "next-auth" // Import NextAuth Session type
+import { SessionProvider } from "next-auth/react" // Import NextAuth SessionProvider for session management
+import { Provider } from "react-redux"
+import store from "../libs/Store/store"
 
 interface MyAppProps extends AppProps {
   session: Session // Define the session property in MyAppProps
@@ -22,8 +24,10 @@ function MyApp({ Component, pageProps, session }: MyAppProps) {
 
   return (
     <SessionProvider session={session}>
-      <ToastComponent />
-      <Component {...pageProps} />
+      <Provider store={store}>
+        <ToastComponent />
+        <Component {...pageProps} />
+      </Provider>
     </SessionProvider>
   )
 }
