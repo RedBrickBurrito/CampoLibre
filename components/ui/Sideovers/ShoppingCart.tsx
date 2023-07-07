@@ -24,29 +24,37 @@ interface Product {
   quantity?: number
 }
 
+/**
+ * A shopping cart component that displays items in the cart and provides actions for managing them.
+ */
 export default function ShoppingCart({ onClose }: ShoppingCartProps) {
   const [open, setOpen] = useState(true)
   const dispatch = useDispatch()
   const { cartItems } = useCartManagement()
   const isButtonDisabled = cartItems.length === 0
 
+  // Handles decrementing the quantity of a product in the cart
   const handleDecrementQuantity = (productId: string) => {
     dispatch(decrementQuantity(productId))
   }
 
+  // Handles incrementing the quantity of a product in the cart
   const handleIncrementQuantity = (productId: string) => {
     dispatch(incrementQuantity(productId))
   }
 
+  // Handles removing a product from the cart
   const handleRemoveItem = (productId: string) => {
     dispatch(removeFromCart(productId))
   }
 
+  // Calculates the cost of a product based on its price and quantity
   const calculateCost = (product: Product) => {
     const cost = (product.price || 0) * (product.quantity || 0)
     return cost.toFixed(2)
   }
 
+  // Calculates the subtotal of all products in the cart
   const calculateSubtotal = (): number => {
     return cartItems.reduce((subtotal, product) => {
       const cost = parseFloat(calculateCost(product))
