@@ -1,86 +1,58 @@
-import { Fragment, useState, useEffect } from "react"
+import { Fragment, useState } from "react"
 import { Dialog, Transition } from "@headlessui/react"
-import { XMarkIcon, MinusSmallIcon, PlusSmallIcon} from "@heroicons/react/24/outline"
-import { useDispatch, useSelector } from 'react-redux';
-import { removeFromCart, incrementQuantity, decrementQuantity, setCartItems} from '../../../libs/Store/store';
+import { XMarkIcon, MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline"
+import { useDispatch } from "react-redux"
+import { removeFromCart, incrementQuantity, decrementQuantity, setCartItems } from "../../../libs/Store/store"
+import { useCartManagement } from "hooks/useCartManagement"
 import Image from "next/image"
-
 
 type OnCloseFunction = () => void
 
 interface ShoppingCartProps {
-  onClose: OnCloseFunction;
+  onClose: OnCloseFunction
 }
 
 interface Product {
-  id: string;
-  name: string;
-  imageSrc: string;
-  imageAlt: string;
-  categoryId: string;
-  price: number;
-  description?: string;
-  expirationDate?: Date;
-  quantity?: number;
+  id: string
+  name: string
+  imageSrc: string
+  imageAlt: string
+  categoryId: string
+  price: number
+  description?: string
+  expirationDate?: Date
+  quantity?: number
 }
 
-interface RootState {
-  cart: Product[]
-}
-
-export default function ShoppingCart({ onClose}: ShoppingCartProps) {
-  const [open, setOpen] = useState(true);
-  const dispatch = useDispatch();
-  const cartItems = useSelector((state: RootState) => state.cart);
-  const isButtonDisabled = cartItems.length === 0;
-
-  useEffect(() => {
-    const cartItemsFromStorage = localStorage.getItem("cart");
-    console.log("Cart items from storage:", cartItemsFromStorage);
-    if (cartItemsFromStorage !== undefined) {
-      try {
-        const parsedCartItems = JSON.parse(cartItemsFromStorage || '[]');
-        console.log("Parsed cart items:", parsedCartItems);
-        if (Array.isArray(parsedCartItems)) {
-          dispatch(setCartItems(parsedCartItems as Product[]));
-        }
-      } catch (error) {
-        console.error("Error parsing cart items:", error);
-      }
-    }
-  }, [dispatch]);
+export default function ShoppingCart({ onClose }: ShoppingCartProps) {
+  const [open, setOpen] = useState(true)
+  const dispatch = useDispatch()
+  const { cartItems } = useCartManagement()
+  const isButtonDisabled = cartItems.length === 0
 
   const handleDecrementQuantity = (productId: string) => {
-    dispatch(decrementQuantity(productId));
-  };
+    dispatch(decrementQuantity(productId))
+  }
 
   const handleIncrementQuantity = (productId: string) => {
-    dispatch(incrementQuantity(productId));
-  };
+    dispatch(incrementQuantity(productId))
+  }
 
   const handleRemoveItem = (productId: string) => {
-    dispatch(removeFromCart(productId));
-  };
-
+    dispatch(removeFromCart(productId))
+  }
 
   const calculateCost = (product: Product) => {
-    const cost = (product.price || 0) * (product.quantity || 0);
-    return cost.toFixed(2);
-  };
+    const cost = (product.price || 0) * (product.quantity || 0)
+    return cost.toFixed(2)
+  }
 
   const calculateSubtotal = (): number => {
-    let subtotal = 0;
-    for (const product of cartItems) {
-      const cost = parseFloat(calculateCost(product));
-      subtotal += cost;
-    }
-    return parseFloat(subtotal.toFixed(2));
-  };
-
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartItems));
-  }, [cartItems]);
-
+    return cartItems.reduce((subtotal, product) => {
+      const cost = parseFloat(calculateCost(product))
+      return subtotal + cost
+    }, 0)
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -137,80 +109,92 @@ export default function ShoppingCart({ onClose}: ShoppingCartProps) {
                       </div>
 
                       <div className="mt-8">
-                      {cartItems.length > 0 ? (
-                        <div className="flow-root">
-                          <ul role="list" className="-my-6 divide-y divide-gray-200">
-                            {cartItems.map((product) => (
-                              <li key={product.id} className="flex py-6">
-                                <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                  <img
-                                    src={product.imageSrc}
-                                    alt={product.imageAlt}
-                                    className="h-full w-full object-cover object-center"
-                                  />
-                                </div>
+                        {cartItems.length > 0 ? (
+                          <div className="flow-root">
+                            <ul role="list" className="-my-6 divide-y divide-gray-200">
+                              {cartItems.map((product) => (
+                                <li key={product.id} className="flex py-6">
+                                  <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                    <Image
+                                      src={product.imageSrc}
+                                      alt={product.imageAlt}
+                                      className="h-full w-full object-cover object-center"
+                                      width={1000}
+                                      height={1000}
+                                    />
+                                  </div>
 
-                                <div className="ml-4 flex flex-1 flex-col">
-                                  <div>
-                                    <div className="flex justify-between text-base font-medium text-gray-900">
-                                      <h3>
-                                        <a href="#">{product.name}</a>
-                                      </h3>
-                                      <p className="ml-4">${calculateCost(product)}</p>
+                                  <div className="ml-4 flex flex-1 flex-col">
+                                    <div>
+                                      <div className="flex justify-between text-base font-medium text-gray-900">
+                                        <h3>
+                                          <a href="#">{product.name}</a>
+                                        </h3>
+                                        <p className="ml-4">${calculateCost(product)}</p>
+                                      </div>
                                     </div>
-                                  </div>
-                                  <div className="flex flex-1 items-end justify-around text-sm">
-                                  <button onClick={() => handleDecrementQuantity(product.id)} type="button" className="text-primary-500 hover:text-primary-50 bg-primary-50 hover:bg-primary-500 font-medium border border-primary-500 hover:border-transparent focus:ring focus:ring-primary-100  rounded-full text-sm p-2.5 text-center inline-flex items-center ">
-                                    <MinusSmallIcon className="w-3 h-3" />
-                                    <span className="sr-only">Decrement</span>
-                                  </button>
-                                  <p className="text-gray-500 font-small">Cant. {product.quantity}</p>
-                                  <button onClick={() => handleIncrementQuantity(product.id)} type="button" className="text-primary-500 hover:text-primary-50 bg-primary-50 hover:bg-primary-500 font-medium border border-primary-500 hover:border-transparent focus:ring focus:ring-primary-100 rounded-full text-sm p-2.5 text-center inline-flex items-center">
-                                    <PlusSmallIcon className="w-3 h-3" />
-                                    <span className="sr-only">Increment</span>
-                                  </button>
-                                    <div className="flex">
+                                    <div className="flex flex-1 items-end justify-around text-sm">
                                       <button
+                                        onClick={() => handleDecrementQuantity(product.id)}
                                         type="button"
-                                        className="font-medium text-red-600 hover:text-red-400"
-                                        onClick={() => handleRemoveItem(product.id)}
+                                        className="inline-flex items-center rounded-full border border-primary-500 bg-primary-50 p-2.5 text-center text-sm font-medium  text-primary-500 hover:border-transparent hover:bg-primary-500 hover:text-primary-50 focus:ring focus:ring-primary-100 "
                                       >
-                                        Remover
+                                        <MinusSmallIcon className="h-3 w-3" />
+                                        <span className="sr-only">Decrement</span>
                                       </button>
+                                      <p className="font-small text-gray-500">Cant. {product.quantity}</p>
+                                      <button
+                                        onClick={() => handleIncrementQuantity(product.id)}
+                                        type="button"
+                                        className="inline-flex items-center rounded-full border border-primary-500 bg-primary-50 p-2.5 text-center text-sm font-medium text-primary-500 hover:border-transparent hover:bg-primary-500 hover:text-primary-50 focus:ring focus:ring-primary-100"
+                                      >
+                                        <PlusSmallIcon className="h-3 w-3" />
+                                        <span className="sr-only">Increment</span>
+                                      </button>
+                                      <div className="flex">
+                                        <button
+                                          type="button"
+                                          className="font-medium text-red-600 hover:text-red-400"
+                                          onClick={() => handleRemoveItem(product.id)}
+                                        >
+                                          Remover
+                                        </button>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ) : (
-                        <p className="text-gray-500">El carrito esta vacio</p>
-                      )}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ) : (
+                          <p className="text-gray-500">El carrito esta vacio</p>
+                        )}
                       </div>
                     </div>
 
                     <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
-                      <div className="flex justify-between text-base font-medium text-gray-900">
+                      <div className="flex justify-between text-base font-medium text-primary-900">
                         <p>Subtotal</p>
-                        <p>${calculateSubtotal()}</p>
+                        <p>${calculateSubtotal().toFixed(2)}</p>
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">
                         Gastos de envío e impuestos calculados en el momento de la compra.
                       </p>
                       {cartItems.length > 0 ? (
-                      <div className="mt-6">
-                        <a
-                          href="#"
-                          className="flex items-center justify-center rounded-md border border-transparent bg-primary-500 px-6 py-3 text-base font-medium text-primary-50 shadow-sm hover:bg-primary-800"
-                        >
-                          Pagar
-                        </a>
-                      </div>
+                        <div className="mt-6">
+                          <a
+                            href="#"
+                            className="flex items-center justify-center rounded-md border border-transparent bg-primary-500 px-6 py-3 text-base font-medium text-primary-50 shadow-sm hover:bg-primary-600"
+                          >
+                            Pagar
+                          </a>
+                        </div>
                       ) : (
                         <div className="mt-6">
                           <button
-                            className={`flex items-center w-full justify-center rounded-md border border-transparent bg-primary-500 px-6 py-3 text-base font-medium text-primary-50 shadow-sm hover:bg-primary-800 ${isButtonDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`flex w-full items-center justify-center rounded-md border border-transparent bg-primary-500 px-6 py-3 text-base font-medium text-primary-50 shadow-sm hover:bg-primary-600 ${
+                              isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+                            }`}
                             disabled={isButtonDisabled}
                           >
                             Pagar

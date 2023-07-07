@@ -63,15 +63,9 @@ export default function Login() {
 
   return (
     <>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-primary-50">
+      <div className="flex min-h-full flex-1 flex-col justify-center bg-primary-50 px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <Image
-            className="mx-auto"
-            src="/Campo_Libre_Logo_Short.png"
-            alt="Campo Libre"
-            height={50}
-            width={80}
-          />
+          <Image className="mx-auto" src="/Campo_Libre_Logo_Short.png" alt="Campo Libre" height={50} width={80} />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Ingresa a tu cuenta
           </h2>
@@ -82,7 +76,7 @@ export default function Login() {
             <div className="flex flex-col space-y-4">
               <button
                 onClick={() => signIn("google")}
-                className="flex items-center gap-5 rounded-lg border borinder-slate-200 px-4 py-2 text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow"
+                className="borinder-slate-200 flex items-center gap-5 rounded-lg border px-4 py-2 text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow"
               >
                 <Image
                   className="h-8 w-8"

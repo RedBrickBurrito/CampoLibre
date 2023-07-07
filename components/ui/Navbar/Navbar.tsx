@@ -1,22 +1,21 @@
-import { Fragment, useState, useEffect } from 'react'
-import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
-import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Fragment, useState, useEffect } from "react"
+import { Dialog, Popover, Tab, Transition } from "@headlessui/react"
+import { Bars3Icon, MagnifyingGlassIcon, ShoppingCartIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import { signOut, useSession } from "next-auth/react"
 import ShoppingCart from "@ui/Sideovers/ShoppingCart"
-import Image from 'next/image'
-import { useDispatch, useSelector } from 'react-redux';
-import { setCartItems } from '../../../libs/Store/store';
+import Image from "next/image"
+import { useCartManagement } from "hooks/useCartManagement"
 
 interface Product {
-  id: string;
-  name: string;
-  imageSrc: string;
-  imageAlt: string;
-  categoryId: string;
-  price: number;
-  description?: string;
-  expirationDate?: Date;
-  quantity?: number;
+  id: string
+  name: string
+  imageSrc: string
+  imageAlt: string
+  categoryId: string
+  price: number
+  description?: string
+  expirationDate?: Date
+  quantity?: number
 }
 
 interface RootState {
@@ -24,178 +23,160 @@ interface RootState {
 }
 
 interface NavbarProps {
-  cartItems: Product[];
+  cartItems: Product[]
 }
 
 interface Category {
-    id: string;
-    name: string;
-    featured: {
-      name: string;
-      href: string;
-      imageSrc: string;
-      imageAlt: string;
-    }[];
-    sections: {
-      id: string;
-      name: string;
-      items: {
-        name: string;
-        href: string;
-      }[];
-    }[];
-  }
-  
-  interface Page {
-    name: string;
-    href: string;
-  }
-  
-  interface Navigation {
-    categories: Category[];
-    pages: Page[];
-  }
+  id: string
+  name: string
+  featured: {
+    name: string
+    href: string
+    imageSrc: string
+    imageAlt: string
+  }[]
+  sections: {
+    id: string
+    name: string
+    items: {
+      name: string
+      href: string
+    }[]
+  }[]
+}
+
+interface Page {
+  name: string
+  href: string
+}
+
+interface Navigation {
+  categories: Category[]
+  pages: Page[]
+}
 
 const navigation: Navigation = {
   categories: [
     {
-      id: 'women',
-      name: 'Inicio',
+      id: "women",
+      name: "Inicio",
       featured: [
         {
-          name: 'New Arrivals',
-          href: '#',
-          imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg',
-          imageAlt: 'Models sitting back to back, wearing Basic Tee in black and bone.',
+          name: "New Arrivals",
+          href: "#",
+          imageSrc: "https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg",
+          imageAlt: "Models sitting back to back, wearing Basic Tee in black and bone.",
         },
         {
-          name: 'Basic Tees',
-          href: '#',
-          imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-02.jpg',
-          imageAlt: 'Close up of Basic Tee fall bundle with off-white, ochre, olive, and black tees.',
+          name: "Basic Tees",
+          href: "#",
+          imageSrc: "https://tailwindui.com/img/ecommerce-images/mega-menu-category-02.jpg",
+          imageAlt: "Close up of Basic Tee fall bundle with off-white, ochre, olive, and black tees.",
         },
       ],
       sections: [
         {
-          id: 'clothing',
-          name: 'Clothing',
+          id: "clothing",
+          name: "Clothing",
           items: [
-            { name: 'Tops', href: '#' },
-            { name: 'Dresses', href: '#' },
-            { name: 'Pants', href: '#' },
-            { name: 'Denim', href: '#' },
-            { name: 'Sweaters', href: '#' },
-            { name: 'T-Shirts', href: '#' },
-            { name: 'Jackets', href: '#' },
-            { name: 'Activewear', href: '#' },
-            { name: 'Browse All', href: '#' },
+            { name: "Tops", href: "#" },
+            { name: "Dresses", href: "#" },
+            { name: "Pants", href: "#" },
+            { name: "Denim", href: "#" },
+            { name: "Sweaters", href: "#" },
+            { name: "T-Shirts", href: "#" },
+            { name: "Jackets", href: "#" },
+            { name: "Activewear", href: "#" },
+            { name: "Browse All", href: "#" },
           ],
         },
         {
-          id: 'accessories',
-          name: 'Accessories',
+          id: "accessories",
+          name: "Accessories",
           items: [
-            { name: 'Watches', href: '#' },
-            { name: 'Wallets', href: '#' },
-            { name: 'Bags', href: '#' },
-            { name: 'Sunglasses', href: '#' },
-            { name: 'Hats', href: '#' },
-            { name: 'Belts', href: '#' },
+            { name: "Watches", href: "#" },
+            { name: "Wallets", href: "#" },
+            { name: "Bags", href: "#" },
+            { name: "Sunglasses", href: "#" },
+            { name: "Hats", href: "#" },
+            { name: "Belts", href: "#" },
           ],
         },
         {
-          id: 'brands',
-          name: 'Brands',
+          id: "brands",
+          name: "Brands",
           items: [
-            { name: 'Full Nelson', href: '#' },
-            { name: 'My Way', href: '#' },
-            { name: 'Re-Arranged', href: '#' },
-            { name: 'Counterfeit', href: '#' },
-            { name: 'Significant Other', href: '#' },
+            { name: "Full Nelson", href: "#" },
+            { name: "My Way", href: "#" },
+            { name: "Re-Arranged", href: "#" },
+            { name: "Counterfeit", href: "#" },
+            { name: "Significant Other", href: "#" },
           ],
         },
       ],
     },
     {
-      id: 'products',
-      name: 'Productos',
+      id: "products",
+      name: "Productos",
       featured: [
         {
-          name: 'Todos',
-          href: '#',
-          imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-04-detail-product-shot-01.jpg',
-          imageAlt: 'Drawstring top with elastic loop closure and textured interior padding.',
-        }
+          name: "Todos",
+          href: "#",
+          imageSrc: "https://tailwindui.com/img/ecommerce-images/product-page-04-detail-product-shot-01.jpg",
+          imageAlt: "Drawstring top with elastic loop closure and textured interior padding.",
+        },
       ],
       sections: [
         {
-          id: 'fruits',
-          name: 'Frutas',
+          id: "fruits",
+          name: "Frutas",
           items: [
-            { name: 'Tops', href: '#' },
-            { name: 'Pants', href: '#' },
-            { name: 'Sweaters', href: '#' },
-            { name: 'T-Shirts', href: '#' },
-            { name: 'Jackets', href: '#' },
-            { name: 'Activewear', href: '#' },
-            { name: 'Browse All', href: '#' },
+            { name: "Tops", href: "#" },
+            { name: "Pants", href: "#" },
+            { name: "Sweaters", href: "#" },
+            { name: "T-Shirts", href: "#" },
+            { name: "Jackets", href: "#" },
+            { name: "Activewear", href: "#" },
+            { name: "Browse All", href: "#" },
           ],
         },
         {
-          id: 'vegetables',
-          name: 'Verduras',
+          id: "vegetables",
+          name: "Verduras",
           items: [
-            { name: 'Watches', href: '#' },
-            { name: 'Wallets', href: '#' },
-            { name: 'Bags', href: '#' },
-            { name: 'Sunglasses', href: '#' },
-            { name: 'Hats', href: '#' },
-            { name: 'Belts', href: '#' },
+            { name: "Watches", href: "#" },
+            { name: "Wallets", href: "#" },
+            { name: "Bags", href: "#" },
+            { name: "Sunglasses", href: "#" },
+            { name: "Hats", href: "#" },
+            { name: "Belts", href: "#" },
           ],
         },
       ],
     },
   ],
   pages: [
-    { name: 'Mis Pedidos', href: '#' },
-    { name: 'Calendario', href: '#' },
+    { name: "Mis Pedidos", href: "#" },
+    { name: "Calendario", href: "#" },
   ],
 }
 
 function classNames(...classes: String[]) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ")
 }
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
-  const { data: session } = useSession();
-  const [cartOpen, setCartOpen] = useState(false);
-  const dispatch = useDispatch();
-  const cartItems = useSelector((state: RootState) => state.cart);
-
-
-  useEffect(() => {
-    const cartItemsFromStorage = localStorage.getItem("cart");
-    console.log("Cart items from storage:", cartItemsFromStorage);
-    if (cartItemsFromStorage !== undefined) {
-      try {
-        const parsedCartItems = JSON.parse(cartItemsFromStorage || '[]');
-        console.log("Parsed cart items:", parsedCartItems);
-        if (Array.isArray(parsedCartItems)) {
-          dispatch(setCartItems(parsedCartItems as Product[]));
-        }
-      } catch (error) {
-        console.error("Error parsing cart items:", error);
-      }
-    }
-  }, [dispatch]);
+  const [open, setOpen] = useState(false)
+  const { data: session } = useSession()
+  const [cartOpen, setCartOpen] = useState(false)
+  const { cartItems } = useCartManagement()
 
   const handleCartClose = () => {
     setCartOpen(false)
   }
 
   const calculateCartItems = () => {
-    return cartItems.length;
+    return cartItems.length
   }
 
   return (
@@ -246,8 +227,8 @@ export default function Navbar() {
                           key={category.name}
                           className={({ selected }) =>
                             classNames(
-                              selected ? 'border-primary-600 text-primary-600' : 'border-transparent text-gray-900',
-                              'flex-1 whitespace-nowrap border-b-2 px-1 py-4 text-base font-medium'
+                              selected ? "border-primary-600 text-primary-600" : "border-transparent text-gray-900",
+                              "flex-1 whitespace-nowrap border-b-2 px-1 py-4 text-base font-medium"
                             )
                           }
                         >
@@ -373,13 +354,7 @@ export default function Navbar() {
               <div className="ml-4 flex lg:ml-0">
                 <a href="#">
                   <span className="sr-only">Campo Libre</span>
-                  <Image
-                    className="h-8 w-auto"
-                    src="/campo-libre-logo-short.svg"
-                    alt=""
-                    height={8}
-                    width={8}
-                  />
+                  <Image className="h-8 w-auto" src="/campo-libre-logo-short.svg" alt="" height={8} width={8} />
                 </a>
               </div>
 
@@ -394,9 +369,9 @@ export default function Navbar() {
                             <Popover.Button
                               className={classNames(
                                 open
-                                  ? 'border-primary-600 text-primary-600'
-                                  : 'border-transparent text-gray-700 hover:text-gray-800',
-                                'relative z-10 -mb-px flex items-center border-b-2 pt-px text-sm font-medium transition-colors duration-200 ease-out'
+                                  ? "border-primary-600 text-primary-600"
+                                  : "border-transparent text-gray-700 hover:text-gray-800",
+                                "relative z-10 -mb-px flex items-center border-b-2 pt-px text-sm font-medium transition-colors duration-200 ease-out"
                               )}
                             >
                               {category.name}
@@ -486,10 +461,10 @@ export default function Navbar() {
               <div className="ml-auto flex items-center">
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   {session ? (
-                    <button onClick={() => signOut()} className="text-sm -m-2 block p-2 font-medium text-gray-900">
+                    <button onClick={() => signOut()} className="-m-2 block p-2 text-sm font-medium text-gray-900">
                       Cerrar Sesión
                     </button>
-                  )  : (
+                  ) : (
                     <>
                       <a href="/login" className="text-sm font-medium text-gray-700 hover:text-gray-800">
                         Ingresa a tu cuenta
@@ -499,7 +474,7 @@ export default function Navbar() {
                         Crea tu usuario
                       </a>
                     </>
-                  )}           
+                  )}
                 </div>
 
                 <div className="hidden lg:ml-8 lg:flex">
@@ -526,12 +501,14 @@ export default function Navbar() {
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
-                  <a className="group -m-2 flex items-center p-2"  onClick={() => setCartOpen(true)}>
-                    <ShoppingBagIcon
+                  <a className="group -m-2 flex items-center p-2" onClick={() => setCartOpen(true)}>
+                    <ShoppingCartIcon
                       className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"
                     />
-                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">{calculateCartItems()}</span>
+                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
+                      {calculateCartItems()}
+                    </span>
                     <span className="sr-only">items in cart, view bag</span>
                   </a>
                 </div>

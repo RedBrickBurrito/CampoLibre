@@ -4,8 +4,8 @@ import { SessionProvider } from "next-auth/react" // Import NextAuth SessionProv
 import { AppProps } from "next/app" // Import Next.js types for the app component
 import { Session } from "next-auth" // Import NextAuth Session type
 import dynamic from "next/dynamic" // Import dynamic from Next.js for dynamic component import
-import store from '../libs/Store/store'
-import { Provider } from 'react-redux'
+import store from "../libs/Store/store"
+import { Provider } from "react-redux"
 
 interface MyAppProps extends AppProps {
   session: Session // Define the session property in MyAppProps
@@ -25,8 +25,8 @@ function MyApp({ Component, pageProps, session }: MyAppProps) {
   return (
     <SessionProvider session={session}>
       <Provider store={store}>
-      <ToastComponent />
-      <Component {...pageProps} />
+        <ToastComponent />
+        <Component {...pageProps} />
       </Provider>
     </SessionProvider>
   )
