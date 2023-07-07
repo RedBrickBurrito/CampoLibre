@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from "react"
 import { Dialog, Transition } from "@headlessui/react"
-import { XMarkIcon } from "@heroicons/react/24/outline"
+import { XMarkIcon, MinusSmallIcon, PlusSmallIcon} from "@heroicons/react/24/outline"
 import { useDispatch, useSelector } from 'react-redux';
 import { removeFromCart, incrementQuantity, decrementQuantity, setCartItems} from '../../../libs/Store/store';
 import Image from "next/image"
@@ -117,14 +117,14 @@ export default function ShoppingCart({ onClose}: ShoppingCartProps) {
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
-                  <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                  <div className="flex h-full flex-col overflow-y-scroll bg-primary-50 shadow-xl">
                     <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                       <div className="flex items-start justify-between">
-                        <Dialog.Title className="text-lg font-medium text-gray-900">Carrito de compras</Dialog.Title>
+                        <Dialog.Title className="text-lg font-medium text-primary-900">Carrito de compras</Dialog.Title>
                         <div className="ml-3 flex h-7 items-center">
                           <button
                             type="button"
-                            className="-m-2 p-2 text-gray-400 hover:text-gray-500"
+                            className="-m-2 p-2 text-primary-600 hover:text-primary-500"
                             onClick={() => {
                               setOpen(false)
                               onClose()
@@ -159,14 +159,20 @@ export default function ShoppingCart({ onClose}: ShoppingCartProps) {
                                       <p className="ml-4">${calculateCost(product)}</p>
                                     </div>
                                   </div>
-                                  <div className="flex flex-1 items-end justify-between text-sm">
-                                  <button className="px-2 py-0 shadow" onClick={() => handleDecrementQuantity(product.id)}>-</button>
-                                  <p className="text-gray-500">Cant. {product.quantity}</p>
-                                  <button className="px-2 py-0 shadow" onClick={() => handleIncrementQuantity(product.id)}>+</button>
+                                  <div className="flex flex-1 items-end justify-around text-sm">
+                                  <button onClick={() => handleDecrementQuantity(product.id)} type="button" className="text-primary-500 hover:text-primary-50 bg-primary-50 hover:bg-primary-500 font-medium border border-primary-500 hover:border-transparent focus:ring focus:ring-primary-100  rounded-full text-sm p-2.5 text-center inline-flex items-center ">
+                                    <MinusSmallIcon className="w-3 h-3" />
+                                    <span className="sr-only">Decrement</span>
+                                  </button>
+                                  <p className="text-gray-500 font-small">Cant. {product.quantity}</p>
+                                  <button onClick={() => handleIncrementQuantity(product.id)} type="button" className="text-primary-500 hover:text-primary-50 bg-primary-50 hover:bg-primary-500 font-medium border border-primary-500 hover:border-transparent focus:ring focus:ring-primary-100 rounded-full text-sm p-2.5 text-center inline-flex items-center">
+                                    <PlusSmallIcon className="w-3 h-3" />
+                                    <span className="sr-only">Increment</span>
+                                  </button>
                                     <div className="flex">
                                       <button
                                         type="button"
-                                        className="font-medium text-indigo-600 hover:text-indigo-500"
+                                        className="font-medium text-red-600 hover:text-red-400"
                                         onClick={() => handleRemoveItem(product.id)}
                                       >
                                         Remover
@@ -196,7 +202,7 @@ export default function ShoppingCart({ onClose}: ShoppingCartProps) {
                       <div className="mt-6">
                         <a
                           href="#"
-                          className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                          className="flex items-center justify-center rounded-md border border-transparent bg-primary-500 px-6 py-3 text-base font-medium text-primary-50 shadow-sm hover:bg-primary-800"
                         >
                           Pagar
                         </a>
@@ -204,7 +210,7 @@ export default function ShoppingCart({ onClose}: ShoppingCartProps) {
                       ) : (
                         <div className="mt-6">
                           <button
-                            className={`flex items-center w-full justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 ${isButtonDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`flex items-center w-full justify-center rounded-md border border-transparent bg-primary-500 px-6 py-3 text-base font-medium text-primary-50 shadow-sm hover:bg-primary-800 ${isButtonDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                             disabled={isButtonDisabled}
                           >
                             Pagar
@@ -216,7 +222,7 @@ export default function ShoppingCart({ onClose}: ShoppingCartProps) {
                           o&nbsp;
                           <button
                             type="button"
-                            className="font-medium text-indigo-600 hover:text-indigo-500"
+                            className="font-medium text-primary-600 hover:text-primary-500"
                             onClick={() => {
                               setOpen(false)
                               onClose()

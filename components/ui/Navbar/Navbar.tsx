@@ -199,7 +199,7 @@ export default function Navbar() {
   }
 
   return (
-    <div className="bg-white">
+    <div className="bg-primary-50">
       {/* Mobile menu */}
       <Transition.Root show={open} as={Fragment}>
         <Dialog as="div" className="relative z-40 lg:hidden" onClose={setOpen}>
@@ -225,7 +225,7 @@ export default function Navbar() {
               leaveFrom="translate-x-0"
               leaveTo="-translate-x-full"
             >
-              <Dialog.Panel className="relative flex w-full max-w-xs flex-col overflow-y-auto bg-white pb-12 shadow-xl">
+              <Dialog.Panel className="relative flex w-full max-w-xs flex-col overflow-y-auto bg-primary-50 pb-12 shadow-xl">
                 <div className="flex px-4 pb-2 pt-5">
                   <button
                     type="button"
@@ -246,7 +246,7 @@ export default function Navbar() {
                           key={category.name}
                           className={({ selected }) =>
                             classNames(
-                              selected ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-900',
+                              selected ? 'border-primary-600 text-primary-600' : 'border-transparent text-gray-900',
                               'flex-1 whitespace-nowrap border-b-2 px-1 py-4 text-base font-medium'
                             )
                           }
@@ -352,9 +352,9 @@ export default function Navbar() {
         </Dialog>
       </Transition.Root>
 
-      <header className="relative bg-white">
-        <p className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
-          Get free delivery on orders over $100
+      <header className="relative bg-primary-50">
+        <p className="flex h-10 items-center justify-center bg-primary-600 px-4 text-sm font-medium text-primary-50 sm:px-6 lg:px-8">
+          Tus primeros pedidos son gratis hasta $300
         </p>
 
         <nav aria-label="Top" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -362,7 +362,7 @@ export default function Navbar() {
             <div className="flex h-16 items-center">
               <button
                 type="button"
-                className="rounded-md bg-white p-2 text-gray-400 lg:hidden"
+                className="rounded-md bg-primary-50 p-2 text-gray-400 lg:hidden"
                 onClick={() => setOpen(true)}
               >
                 <span className="sr-only">Open menu</span>
@@ -373,10 +373,12 @@ export default function Navbar() {
               <div className="ml-4 flex lg:ml-0">
                 <a href="#">
                   <span className="sr-only">Campo Libre</span>
-                  <img
+                  <Image
                     className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                    src="/campo-libre-logo-short.svg"
                     alt=""
+                    height={8}
+                    width={8}
                   />
                 </a>
               </div>
@@ -392,7 +394,7 @@ export default function Navbar() {
                             <Popover.Button
                               className={classNames(
                                 open
-                                  ? 'border-indigo-600 text-indigo-600'
+                                  ? 'border-primary-600 text-primary-600'
                                   : 'border-transparent text-gray-700 hover:text-gray-800',
                                 'relative z-10 -mb-px flex items-center border-b-2 pt-px text-sm font-medium transition-colors duration-200 ease-out'
                               )}
@@ -412,9 +414,9 @@ export default function Navbar() {
                           >
                             <Popover.Panel className="absolute inset-x-0 top-full text-sm text-gray-500">
                               {/* Presentational element used to render the bottom shadow, if we put the shadow on the actual panel it pokes out the top, so we use this shorter element to hide the top of the shadow */}
-                              <div className="absolute inset-0 top-1/2 bg-white shadow" aria-hidden="true" />
+                              <div className="absolute inset-0 top-1/2 bg-primary-50 shadow" aria-hidden="true" />
 
-                              <div className="relative bg-white">
+                              <div className="relative bg-primary-50">
                                 <div className="mx-auto max-w-7xl px-8">
                                   <div className="grid grid-cols-2 gap-x-8 gap-y-10 py-16">
                                     <div className="col-start-2 grid grid-cols-2 gap-x-8">

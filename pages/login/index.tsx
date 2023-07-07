@@ -63,7 +63,7 @@ export default function Login() {
 
   return (
     <>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-primary-50">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <Image
             className="mx-auto"
@@ -82,10 +82,12 @@ export default function Login() {
             <div className="flex flex-col space-y-4">
               <button
                 onClick={() => signIn("google")}
-                className="flex items-center gap-5 rounded-lg border border-slate-200 px-4 py-2 text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow"
+                className="flex items-center gap-5 rounded-lg border borinder-slate-200 px-4 py-2 text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow"
               >
-                <img
+                <Image
                   className="h-8 w-8"
+                  width={8}
+                  height={8}
                   src="https://www.svgrepo.com/show/475656/google-color.svg"
                   loading="lazy"
                   alt="google logo"
@@ -112,7 +114,7 @@ export default function Login() {
                   Contraseña
                 </label>
                 <div className="text-sm">
-                  <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
+                  <a href="#" className="font-semibold text-primary-600 hover:text-primary-500">
                     ¿Olvidaste tu contraseña?
                   </a>
                 </div>
@@ -124,7 +126,7 @@ export default function Login() {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6"
                   value={data.password}
                   onChange={(e) => setData({ ...data, password: e.target.value })}
                 />
@@ -134,7 +136,7 @@ export default function Login() {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center rounded-md bg-primary-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
               >
                 Iniciar Sesión
               </button>
@@ -143,7 +145,7 @@ export default function Login() {
               ¿Aún no estás registrado?{" "}
               <a
                 href="http://localhost:3000/register"
-                className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+                className="font-semibold leading-6 text-primary-600 hover:text-primary-500"
               >
                 Regístrate
               </a>

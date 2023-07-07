@@ -3,7 +3,6 @@ import Navbar from "@ui/Navbar/Navbar";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { PlusSmallIcon, MinusSmallIcon } from '@heroicons/react/24/outline'
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, setCartItems, incrementQuantity} from '../libs/Store/store';
 
@@ -81,7 +80,7 @@ export default function Home() {
   return (
     <>
       <Navbar/>
-      <div>
+      <div className="bg-primary-50">
         <h1>Home</h1>
         {products.map((product) => (
           <div key={product.id}>
