@@ -51,18 +51,26 @@ enum Role {
 model Product {
   id                String    @id @default(auto()) @map("_id") @db.ObjectId
   name              String
-  imageSrc          String
+  price             Float      
+  image             String
   imageAlt          String
-  category          Category  @relation(fields: [categoryId], references: [id])
-  categoryId        String    @db.ObjectId
-  price             Float
-  description       String?
-  expirationDate    DateTime?
+  currency          String    @default("MXN")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  product_data      ProductData[]
+  price_data        PriceData[]
 }
 
-model Category {
-  id                String    @id @default(auto()) @map("_id") @db.ObjectId
-  name              String
-  
-  products          Product[]
+model ProductData {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId String   @db.ObjectId
+  metadata  Json
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model PriceData {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId String   @db.ObjectId
+  recurring Json
+  product   Product  @relation(fields: [productId], references: [id])
 }
