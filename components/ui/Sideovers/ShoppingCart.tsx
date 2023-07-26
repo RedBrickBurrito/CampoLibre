@@ -223,7 +223,7 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
                             onClick={handleCheckout}
                             disabled={loading}
                           >
-                             {loading ? 'Procesado...' : 'Pagar'} {/* Show 'Loading...' when loading is true */}
+                             {loading ? 'Procesando...' : 'Pagar'} {/* Show 'Loading...' when loading is true */}
                           </button>
                         </div>
                       ) : (
