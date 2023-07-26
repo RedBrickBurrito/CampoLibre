@@ -4,7 +4,7 @@ import Image from "next/image"
 import { signOut, useSession } from "next-auth/react"
 import { Fragment, useState } from "react"
 import ShoppingCart from "@ui/Sideovers/ShoppingCart"
-import { useCartManagement } from "hooks/useCartManagement"
+import { useShoppingCart } from 'use-shopping-cart'
 
 interface Category {
   id: string
@@ -149,14 +149,11 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   const { data: session } = useSession()
   const [cartOpen, setCartOpen] = useState(false)
-  const { cartItems } = useCartManagement()
+
+  const { cartCount } = useShoppingCart()
 
   const handleCartClose = () => {
     setCartOpen(false)
-  }
-
-  const calculateCartItems = () => {
-    return cartItems.length
   }
 
   return (
@@ -493,7 +490,7 @@ export default function Navbar() {
                       aria-hidden="true"
                     />
                     <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-                      {calculateCartItems()}
+                      {cartCount}
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
                   </button>

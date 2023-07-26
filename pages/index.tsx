@@ -1,29 +1,35 @@
 import axios from "axios"
 import Image from "next/image"
 import { toast } from "react-hot-toast"
-import { useDispatch } from "react-redux"
 import Navbar from "@ui/Navbar/Navbar"
-import { useCartManagement } from "hooks/useCartManagement"
 import { GetResourceFunction, useDataSource } from "hooks/useDataSource"
-import { addToCart, incrementQuantity } from "../libs/Store/store"
+import { formatCurrencyString } from 'use-shopping-cart'
+import { useShoppingCart } from 'use-shopping-cart'
 
 interface Product {
-  id: string
-  name: string
-  imageSrc: string
-  imageAlt: string
-  categoryId: string
-  price: number
-  description?: string
-  expirationDate?: Date
-  quantity?: number
+  id: string;
+  name: string;
+  price: number;      
+  image: string;
+  imageAlt: string;
+  currency: string;
+  product_data: ProductData[]
+  price_data: PriceData[]
+}
+
+interface ProductData {
+  metadata: JSON
+}
+
+interface PriceData {
+  recurring: JSON
 }
 
 type ProductResource = Product[]
 
 export default function Home() {
-  const dispatch = useDispatch()
-  const { cartItems } = useCartManagement()
+
+  const { addItem } = useShoppingCart()
 
   const fetchProductsData: GetResourceFunction<ProductResource> = async () => {
     try {
@@ -36,13 +42,7 @@ export default function Home() {
   }
 
   const handleAddToCart = (product: Product) => {
-    const existingProduct = cartItems.find((item) => item.id === product.id)
-    if (existingProduct) {
-      dispatch(incrementQuantity(product.id))
-    } else {
-      dispatch(addToCart({ ...product, quantity: 1 }))
-    }
-
+    addItem(product)
     toast.success(`Haz añadido ${product.name} al carrito!!`)
   }
 
@@ -55,9 +55,12 @@ export default function Home() {
         <h1>Home</h1>
         {products.map((product) => (
           <div key={product.id}>
-            <Image src={product.imageSrc} alt={product.imageAlt} height={200} width={200} />
+            <img src={product.image} alt={product.imageAlt} height={200} width={200} />
             <h2>{product.name}</h2>
-            <p>{product.price}</p>
+            <p>{formatCurrencyString({
+              value: product.price,
+              currency: product.currency,
+            })}</p>
             <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
           </div>
         ))}

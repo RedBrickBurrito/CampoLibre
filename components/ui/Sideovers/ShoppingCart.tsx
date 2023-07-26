@@ -1,10 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { MinusSmallIcon, PlusSmallIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import Image from "next/image"
-import { Fragment, useState } from "react"
-import { useDispatch } from "react-redux"
-import { useCartManagement } from "hooks/useCartManagement"
-import { decrementQuantity, incrementQuantity, removeFromCart } from "../../../libs/Store/store"
+import { Fragment, MouseEventHandler, useState } from "react"
+import { fetchPostJSON } from "utils/api-helpers"
+import { useShoppingCart, formatCurrencyString } from "use-shopping-cart"
 
 type OnCloseFunction = () => void
 
@@ -24,28 +23,41 @@ interface Product {
   quantity?: number
 }
 
+
 /**
  * A shopping cart component that displays items in the cart and provides actions for managing them.
  */
 export default function ShoppingCart({ onClose }: ShoppingCartProps) {
   const [open, setOpen] = useState(true)
-  const dispatch = useDispatch()
-  const { cartItems } = useCartManagement()
-  const isButtonDisabled = cartItems.length === 0
+  const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const {
+    formattedTotalPrice,
+    cartCount = 0,
+    clearCart,
+    cartDetails = {},
+    redirectToCheckout,
+    decrementItem,
+    incrementItem,
+    removeItem,
+    totalPrice
+  } = useShoppingCart()
+
+  const isButtonDisabled = cartCount === 0
 
   // Handles decrementing the quantity of a product in the cart
   const handleDecrementQuantity = (productId: string) => {
-    dispatch(decrementQuantity(productId))
+    decrementItem(productId)
   }
 
   // Handles incrementing the quantity of a product in the cart
   const handleIncrementQuantity = (productId: string) => {
-    dispatch(incrementQuantity(productId))
+    incrementItem(productId)
   }
 
   // Handles removing a product from the cart
   const handleRemoveItem = (productId: string) => {
-    dispatch(removeFromCart(productId))
+    removeItem(productId)
   }
 
   // Calculates the cost of a product based on its price and quantity
@@ -54,12 +66,26 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
     return cost.toFixed(2)
   }
 
-  // Calculates the subtotal of all products in the cart
-  const calculateSubtotal = (): number => {
-    return cartItems.reduce((subtotal, product) => {
-      const cost = parseFloat(calculateCost(product))
-      return subtotal + cost
-    }, 0)
+  const handleCheckout: MouseEventHandler<HTMLButtonElement> = async (
+    event
+  ) => {
+    event.preventDefault()
+    setLoading(true)
+    setErrorMessage('')
+
+    const response: any = await fetchPostJSON(
+      '/api/checkout_sessions/cart',
+      cartDetails
+    )
+
+    if (response.statusCode > 399) {
+      console.error(response.message)
+      setErrorMessage(response.message)
+      setLoading(false)
+      return
+    }
+
+    redirectToCheckout(response.id)
   }
 
   return (
@@ -117,15 +143,15 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
                       </div>
 
                       <div className="mt-8">
-                        {cartItems.length > 0 ? (
+                        {cartCount > 0 ? (
                           <div className="flow-root">
                             <ul className="-my-6 divide-y divide-gray-200">
-                              {cartItems.map((product) => (
-                                <li key={product.id} className="flex py-6">
+                              {Object.values(cartDetails ?? {}).map((entry) => (
+                                <li key={entry.id} className="flex py-6">
                                   <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                    <Image
-                                      src={product.imageSrc}
-                                      alt={product.imageAlt}
+                                    <img
+                                      src={entry.image || "/fallback-image.jpg"}
+                                      alt={entry.name}
                                       className="h-full w-full object-cover object-center"
                                       width={1000}
                                       height={1000}
@@ -136,23 +162,23 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
                                     <div>
                                       <div className="flex justify-between text-base font-medium text-gray-900">
                                         <h3>
-                                          <a href="product-info">{product.name}</a>
+                                          <a href="product-info">{entry.name}</a>
                                         </h3>
-                                        <p className="ml-4">${calculateCost(product)}</p>
+                                        <p className="ml-4">{formatCurrencyString({ value: entry.price, currency: 'MXN' })}</p>
                                       </div>
                                     </div>
                                     <div className="flex flex-1 items-end justify-around text-sm">
                                       <button
-                                        onClick={() => handleDecrementQuantity(product.id)}
+                                        onClick={() => handleDecrementQuantity(entry.id)}
                                         type="button"
                                         className="inline-flex items-center rounded-full border border-primary-500 bg-primary-50 p-2.5 text-center text-sm font-medium  text-primary-500 hover:border-transparent hover:bg-primary-500 hover:text-primary-50 focus:ring focus:ring-primary-100 "
                                       >
                                         <MinusSmallIcon className="h-3 w-3" />
                                         <span className="sr-only">Decrement</span>
                                       </button>
-                                      <p className="font-small text-gray-500">Cant. {product.quantity}</p>
+                                      <p className="font-small text-gray-500">Cant. {entry.quantity}</p>
                                       <button
-                                        onClick={() => handleIncrementQuantity(product.id)}
+                                        onClick={() => handleIncrementQuantity(entry.id)}
                                         type="button"
                                         className="inline-flex items-center rounded-full border border-primary-500 bg-primary-50 p-2.5 text-center text-sm font-medium text-primary-500 hover:border-transparent hover:bg-primary-500 hover:text-primary-50 focus:ring focus:ring-primary-100"
                                       >
@@ -163,7 +189,7 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
                                         <button
                                           type="button"
                                           className="font-medium text-red-600 hover:text-red-400"
-                                          onClick={() => handleRemoveItem(product.id)}
+                                          onClick={() => handleRemoveItem(entry.id)}
                                         >
                                           Remover
                                         </button>
@@ -183,19 +209,22 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
                     <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                       <div className="flex justify-between text-base font-medium text-primary-900">
                         <p>Subtotal</p>
-                        <p>${calculateSubtotal().toFixed(2)}</p>
+                        <p>{formatCurrencyString({ value: totalPrice || 0, currency: 'MXN' })}</p>
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">
                         Gastos de envío e impuestos calculados en el momento de la compra.
                       </p>
-                      {cartItems.length > 0 ? (
+                      {cartCount > 0 ? (
                         <div className="mt-6">
-                          <a
-                            href="/checkout"
-                            className="flex items-center justify-center rounded-md border border-transparent bg-primary-500 px-6 py-3 text-base font-medium text-primary-50 shadow-sm hover:bg-primary-600"
+                          <button
+                            className={`flex w-full items-center justify-center rounded-md border border-transparent bg-primary-500 px-6 py-3 text-base font-medium text-primary-50 shadow-sm hover:bg-primary-600 ${
+                              loading ? 'cursor-not-allowed opacity-50' : '' // Disable button when loading is true
+                            }`}
+                            onClick={handleCheckout}
+                            disabled={loading}
                           >
-                            Pagar
-                          </a>
+                             {loading ? 'Procesando...' : 'Pagar'} {/* Show 'Loading...' when loading is true */}
+                          </button>
                         </div>
                       ) : (
                         <div className="mt-6">
