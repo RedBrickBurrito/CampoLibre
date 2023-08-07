@@ -4,8 +4,8 @@ import { AppProps } from "next/app" // Import Next.js types for the app componen
 import dynamic from "next/dynamic" // Import dynamic from Next.js for dynamic component import
 import { Session } from "next-auth" // Import NextAuth Session type
 import { SessionProvider } from "next-auth/react" // Import NextAuth SessionProvider for session management
-import { CartProvider } from 'use-shopping-cart'
-import { CURRENCY } from '../config/index'
+import { CartProvider } from "use-shopping-cart"
+import { CURRENCY } from "../config/index"
 
 interface MyAppProps extends AppProps {
   session: Session // Define the session property in MyAppProps
@@ -25,14 +25,14 @@ function MyApp({ Component, pageProps, session }: MyAppProps) {
   return (
     <SessionProvider session={session}>
       <CartProvider
-      cartMode="checkout-session"
-      stripe={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string}
-      currency={CURRENCY}
-      shouldPersist={true}
+        cartMode="checkout-session"
+        stripe={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string}
+        currency={CURRENCY}
+        shouldPersist={true}
       >
-          <ToastComponent />
-          <Component {...pageProps} />
-      </ CartProvider>
+        <ToastComponent />
+        <Component {...pageProps} />
+      </CartProvider>
     </SessionProvider>
   )
 }
