@@ -5,7 +5,7 @@ import { signOut, useSession } from "next-auth/react"
 import { Fragment, useState } from "react"
 import ShoppingCart from "@ui/Sideovers/ShoppingCart"
 import { useShoppingCart } from "use-shopping-cart"
-import Link from 'next/link'
+import Link from "next/link"
 
 interface Page {
   name: string
@@ -83,7 +83,7 @@ export default function Navbar() {
                   {navigation.pages.map((page) => (
                     <div key={page.name} className="flow-root">
                       <Link href={page.href} className="-m-2 block p-2 font-medium text-gray-900">
-                       {page.name}
+                        {page.name}
                       </Link>
                     </div>
                   ))}
@@ -152,7 +152,7 @@ export default function Navbar() {
               <div className="ml-4 flex lg:ml-0">
                 <Link href="/">
                   <span className="sr-only">Campo Libre</span>
-                    <Image className="h-8 w-auto" src="/campo-libre-logo-short.svg" alt="" height={8} width={8} />
+                  <Image className="h-8 w-auto" src="/campo-libre-logo-short.svg" alt="" height={8} width={8} />
                 </Link>
               </div>
 
@@ -160,8 +160,8 @@ export default function Navbar() {
               <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
                 <div className="flex h-full space-x-8">
                   {navigation.pages.map((page) => (
-                    <Link 
-                    key={page.name}
+                    <Link
+                      key={page.name}
                       href={page.href}
                       className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
                     >
@@ -179,13 +179,13 @@ export default function Navbar() {
                     </button>
                   ) : (
                     <>
-                      <a href="/login" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                      <Link href="/login" className="text-sm font-medium text-gray-700 hover:text-gray-800">
                         Ingresa a tu cuenta
-                      </a>
+                      </Link>
                       <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                      <a href="/register" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                      <Link href="/register" className="text-sm font-medium text-gray-700 hover:text-gray-800">
                         Crea tu usuario
-                      </a>
+                      </Link>
                     </>
                   )}
                 </div>
