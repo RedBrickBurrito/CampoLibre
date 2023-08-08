@@ -5,6 +5,7 @@ import { signOut, useSession } from "next-auth/react"
 import { Fragment, useState } from "react"
 import ShoppingCart from "@ui/Sideovers/ShoppingCart"
 import { useShoppingCart } from "use-shopping-cart"
+import Link from 'next/link'
 
 interface Page {
   name: string
@@ -81,9 +82,9 @@ export default function Navbar() {
                 <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                   {navigation.pages.map((page) => (
                     <div key={page.name} className="flow-root">
-                      <a href={page.href} className="-m-2 block p-2 font-medium text-gray-900">
-                        {page.name}
-                      </a>
+                      <Link href={page.href} className="-m-2 block p-2 font-medium text-gray-900">
+                       {page.name}
+                      </Link>
                     </div>
                   ))}
                 </div>
@@ -149,23 +150,23 @@ export default function Navbar() {
 
               {/* Logo */}
               <div className="ml-4 flex lg:ml-0">
-                <a href="/">
+                <Link href="/">
                   <span className="sr-only">Campo Libre</span>
-                  <Image className="h-8 w-auto" src="/campo-libre-logo-short.svg" alt="" height={8} width={8} />
-                </a>
+                    <Image className="h-8 w-auto" src="/campo-libre-logo-short.svg" alt="" height={8} width={8} />
+                </Link>
               </div>
 
               {/* Flyout menus */}
               <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
                 <div className="flex h-full space-x-8">
                   {navigation.pages.map((page) => (
-                    <a
-                      key={page.name}
+                    <Link 
+                    key={page.name}
                       href={page.href}
                       className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
                     >
                       {page.name}
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </Popover.Group>

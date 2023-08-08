@@ -184,7 +184,7 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
                                       <div className="flex">
                                         <button
                                           type="button"
-                                          className="font-medium text-red-600 hover:text-red-400"
+                                          className="font-medium text-accent-500 hover:text-accent-400"
                                           onClick={() => handleRemoveItem(entry.id)}
                                         >
                                           Remover

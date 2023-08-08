@@ -57,6 +57,7 @@ model Product {
   currency          String    @default("MXN")
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
+  product_type      String    @default("fruit")
   product_data      ProductData[]
   price_data        PriceData[]
 }
