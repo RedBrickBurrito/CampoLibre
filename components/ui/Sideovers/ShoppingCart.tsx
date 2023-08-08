@@ -23,14 +23,13 @@ interface Product {
   quantity?: number
 }
 
-
 /**
  * A shopping cart component that displays items in the cart and provides actions for managing them.
  */
 export default function ShoppingCart({ onClose }: ShoppingCartProps) {
   const [open, setOpen] = useState(true)
   const [loading, setLoading] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState("")
   const {
     formattedTotalPrice,
     cartCount = 0,
@@ -40,7 +39,7 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
     decrementItem,
     incrementItem,
     removeItem,
-    totalPrice
+    totalPrice,
   } = useShoppingCart()
 
   const isButtonDisabled = cartCount === 0
@@ -66,17 +65,12 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
     return cost.toFixed(2)
   }
 
-  const handleCheckout: MouseEventHandler<HTMLButtonElement> = async (
-    event
-  ) => {
+  const handleCheckout: MouseEventHandler<HTMLButtonElement> = async (event) => {
     event.preventDefault()
     setLoading(true)
-    setErrorMessage('')
+    setErrorMessage("")
 
-    const response: any = await fetchPostJSON(
-      '/api/checkout_sessions/cart',
-      cartDetails
-    )
+    const response: any = await fetchPostJSON("/api/checkout_sessions/cart", cartDetails)
 
     if (response.statusCode > 399) {
       console.error(response.message)
@@ -164,7 +158,9 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
                                         <h3>
                                           <a href="product-info">{entry.name}</a>
                                         </h3>
-                                        <p className="ml-4">{formatCurrencyString({ value: entry.price, currency: 'MXN' })}</p>
+                                        <p className="ml-4">
+                                          {formatCurrencyString({ value: entry.price, currency: "MXN" })}
+                                        </p>
                                       </div>
                                     </div>
                                     <div className="flex flex-1 items-end justify-around text-sm">
@@ -188,7 +184,7 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
                                       <div className="flex">
                                         <button
                                           type="button"
-                                          className="font-medium text-red-600 hover:text-red-400"
+                                          className="font-medium text-accent-500 hover:text-accent-400"
                                           onClick={() => handleRemoveItem(entry.id)}
                                         >
                                           Remover
@@ -209,7 +205,7 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
                     <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                       <div className="flex justify-between text-base font-medium text-primary-900">
                         <p>Subtotal</p>
-                        <p>{formatCurrencyString({ value: totalPrice || 0, currency: 'MXN' })}</p>
+                        <p>{formatCurrencyString({ value: totalPrice || 0, currency: "MXN" })}</p>
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">
                         Gastos de envío e impuestos calculados en el momento de la compra.
@@ -218,12 +214,12 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
                         <div className="mt-6">
                           <button
                             className={`flex w-full items-center justify-center rounded-md border border-transparent bg-primary-500 px-6 py-3 text-base font-medium text-primary-50 shadow-sm hover:bg-primary-600 ${
-                              loading ? 'cursor-not-allowed opacity-50' : '' // Disable button when loading is true
+                              loading ? "cursor-not-allowed opacity-50" : "" // Disable button when loading is true
                             }`}
                             onClick={handleCheckout}
                             disabled={loading}
                           >
-                             {loading ? 'Procesando...' : 'Pagar'} {/* Show 'Loading...' when loading is true */}
+                            {loading ? "Procesando..." : "Pagar"} {/* Show 'Loading...' when loading is true */}
                           </button>
                         </div>
                       ) : (
