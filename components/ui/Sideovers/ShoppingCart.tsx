@@ -1,9 +1,8 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { MinusSmallIcon, PlusSmallIcon, XMarkIcon } from "@heroicons/react/24/outline"
-import Image from "next/image"
 import { Fragment, MouseEventHandler, useState } from "react"
 import { fetchPostJSON } from "utils/api-helpers"
-import { useShoppingCart, formatCurrencyString } from "use-shopping-cart"
+import { formatCurrencyString, useShoppingCart } from "use-shopping-cart"
 
 type OnCloseFunction = () => void
 

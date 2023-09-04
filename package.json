@@ -118,7 +118,7 @@
     "patch-package": "^7.0.0",
     "postcss": "^8.4.21",
     "postinstall-postinstall": "^2.1.0",
-    "prettier": "latest",
+    "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.3.0",
     "semantic-release": "^21.0.1",
     "storybook": "^7.0.5",
