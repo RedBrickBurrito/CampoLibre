@@ -75,3 +75,24 @@ model PriceData {
   recurring Json
   product   Product  @relation(fields: [productId], references: [id])
 }
+
+model Order {
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  customerId    String
+  customerName  String
+  status        Status     @default(Pendiente)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  order_details String[] 
+}
+
+enum Status {
+  Pendiente
+  Empaquetada
+  Enviado
+  Completada
+  Cancelada
+  Reembolsado
+  Disputada
+}

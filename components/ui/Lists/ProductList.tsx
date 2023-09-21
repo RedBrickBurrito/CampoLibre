@@ -1,7 +1,6 @@
 import axios from "axios"
 import { toast } from "react-hot-toast"
 import { GetResourceFunction, useDataSource } from "hooks/useDataSource"
-import { formatCurrencyString } from "use-shopping-cart"
 import { useShoppingCart } from "use-shopping-cart"
 import { useState } from "react"
 import ProductCard from "../Cards/ProductCard"

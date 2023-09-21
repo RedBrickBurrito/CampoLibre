@@ -78,6 +78,7 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
       return
     }
 
+    clearCart()
     redirectToCheckout(response.id)
   }
 
