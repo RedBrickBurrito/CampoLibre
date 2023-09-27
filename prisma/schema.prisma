@@ -80,10 +80,13 @@ model Order {
   id            String  @id @default(auto()) @map("_id") @db.ObjectId
   customerId    String
   customerName  String
+  customerEmail String
   status        Status     @default(Pendiente)
+  orderTotal    Int
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-
+  
+  shippingAddress String[]
   order_details String[] 
 }
 

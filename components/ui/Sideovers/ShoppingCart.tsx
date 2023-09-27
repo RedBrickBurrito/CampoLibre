@@ -30,7 +30,6 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
   const {
-    formattedTotalPrice,
     cartCount = 0,
     clearCart,
     cartDetails = {},
@@ -56,12 +55,6 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
   // Handles removing a product from the cart
   const handleRemoveItem = (productId: string) => {
     removeItem(productId)
-  }
-
-  // Calculates the cost of a product based on its price and quantity
-  const calculateCost = (product: Product) => {
-    const cost = (product.price || 0) * (product.quantity || 0)
-    return cost.toFixed(2)
   }
 
   const handleCheckout: MouseEventHandler<HTMLButtonElement> = async (event) => {

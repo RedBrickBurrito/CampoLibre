@@ -5,13 +5,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method === "POST") {
       try {
         // Extract necessary data from the request, e.g., customerId and sessionId
-        const { customerId, customerName, order_details } = req.body as Order;
+        const { customerId, customerName, customerEmail, orderTotal,shippingAddress, order_details } = req.body as Order;
   
         // Create an order in the database using Prisma
         const order = await prisma.order.create({
           data: {
             customerId,
             customerName,
+            customerEmail,
+            orderTotal,
+            shippingAddress,
             order_details,
           },
         });

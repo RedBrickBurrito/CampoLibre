@@ -23,8 +23,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           const orderData = {
             customerId: customer.id,
             customerName: customer.name,
+            customerEmail: customer.email,
+            shippingAddress: JSON.stringify(session.shipping_details),
+            orderTotal: session.amount_total,
             order_details: [
-              JSON.stringify(session.shipping_details),
               JSON.stringify(items)
             ],
           };
