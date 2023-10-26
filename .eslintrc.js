@@ -30,6 +30,9 @@ module.exports = {
       {
         ignoreCase: true,
         ignoreDeclarationSort: true,
+        "types": {
+          "{}":false
+        }
       },
     ],
     "import/order": [

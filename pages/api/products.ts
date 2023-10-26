@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import prisma from "../../libs/prisma"
-import { update } from "lodash"
 
 interface Product {
   id: string
