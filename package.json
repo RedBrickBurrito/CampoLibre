@@ -79,7 +79,7 @@
     "tailwind-merge": "^1.10.0",
     "use-shopping-cart": "^3.1.8",
     "yup": "^1.2.0",
-    "zod": "^3.21.4"
+    "zod": "^3.22.3"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
