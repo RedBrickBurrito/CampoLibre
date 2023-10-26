@@ -2,6 +2,7 @@ declare interface Order {
     createdAt:    ?string;
     customerId:   string;
     customerName: string;
+    internalCustomerId: string;
     customerEmail: string;
     status?:       string;
     orderTotal:    number;

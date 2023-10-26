@@ -3,7 +3,7 @@
 
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import bcrypt from "bcrypt"
-import { NextAuthOptions } from "next-auth"
+import { DefaultSession, NextAuthOptions } from "next-auth"
 import NextAuth from "next-auth/next"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
@@ -22,6 +22,13 @@ interface User {
   id: string
   email: string
   name: string
+}
+
+interface SessionUser extends DefaultSession{
+  id: string;
+  name?: string | null | undefined;
+  email?: string | null | undefined;
+  image?: string | null | undefined;
 }
 
 // Configure NextAuth.js options
@@ -71,6 +78,22 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async redirect({ baseUrl }) {
       return baseUrl
+    },
+    session: async ({ session, token }) => {
+
+      if (session?.user) {
+        session.user.id = token.uid;
+
+      }
+
+      return session;
+    },
+    jwt: async ({user, token}) => {
+      if(user) {
+        token.uid = user.id;
+      }
+
+      return token;
     },
   },
   secret: process.env.SECRET,

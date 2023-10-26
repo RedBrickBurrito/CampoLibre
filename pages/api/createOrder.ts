@@ -4,21 +4,20 @@ import prisma from "../../libs/prisma"
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "POST") {
       try {
-        // Extract necessary data from the request, e.g., customerId and sessionId
-        const { customerId, customerName, customerEmail, orderTotal,shippingAddress, order_details } = req.body as Order;
-  
-        // Create an order in the database using Prisma
+        const { customerId, customerName, internalCustomerId, customerEmail, orderTotal,shippingAddress, order_details } = req.body as Order;
+
         const order = await prisma.order.create({
           data: {
             customerId,
             customerName,
+            internalCustomerId,
             customerEmail,
             orderTotal,
             shippingAddress,
             order_details,
           },
         });
-  
+
         res.status(201).json({ message: "Order created successfully", order });
       } catch (error) {
         console.error(error);

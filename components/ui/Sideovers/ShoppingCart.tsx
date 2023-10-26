@@ -3,6 +3,10 @@ import { MinusSmallIcon, PlusSmallIcon, XMarkIcon } from "@heroicons/react/24/ou
 import { Fragment, MouseEventHandler, useState } from "react"
 import { fetchPostJSON } from "utils/api-helpers"
 import { formatCurrencyString, useShoppingCart } from "use-shopping-cart"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "../../../pages/api/auth/[...nextauth]"
+import { useRouter } from 'next/router'
+import { useSession } from "next-auth/react"
 
 type OnCloseFunction = () => void
 
@@ -39,6 +43,8 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
     removeItem,
     totalPrice,
   } = useShoppingCart()
+  const { data: session } = useSession()
+  const router = useRouter()
 
   const isButtonDisabled = cartCount === 0
 
@@ -62,17 +68,23 @@ export default function ShoppingCart({ onClose }: ShoppingCartProps) {
     setLoading(true)
     setErrorMessage("")
 
-    const response: any = await fetchPostJSON("/api/checkout_sessions/cart", cartDetails)
+    if(session) {
+      console.log(session)
+      const response: any = await fetchPostJSON("/api/checkout_sessions/cart", cartDetails)
 
-    if (response.statusCode > 399) {
-      console.error(response.message)
-      setErrorMessage(response.message)
-      setLoading(false)
-      return
+      if (response.statusCode > 399) {
+        console.error(response.message)
+        setErrorMessage(response.message)
+        setLoading(false)
+        return
+      }
+
+      clearCart()
+      redirectToCheckout(response.id)
+    } else {
+      alert("Necesitas iniciar sesion o crearte una cuenta para poder pagar.")
+      router.push('/login')
     }
-
-    clearCart()
-    redirectToCheckout(response.id)
   }
 
   return (

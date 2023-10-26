@@ -26,6 +26,7 @@ export async function fetchPostJSON(url: string, data?: {}) {
       referrerPolicy: "no-referrer", // no-referrer, *client
       body: JSON.stringify(data || {}), // body data type must match "Content-Type" header
     })
+    console.log('API Response:', response);
     return await response.json() // parses JSON response into native JavaScript objects
   } catch (err) {
     if (err instanceof Error) {

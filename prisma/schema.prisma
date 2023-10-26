@@ -21,6 +21,7 @@ model User {
   role              Role     @default(USER)
   
   accounts          Account[]
+  orders            Order[]
 }
 
 model Account {
@@ -79,6 +80,7 @@ model PriceData {
 model Order {
   id            String  @id @default(auto()) @map("_id") @db.ObjectId
   customerId    String
+  internalCustomerId String 
   customerName  String
   customerEmail String
   status        Status     @default(Pendiente)
@@ -88,6 +90,8 @@ model Order {
   
   shippingAddress String[]
   order_details String[] 
+
+  user          User     @relation(fields: [internalCustomerId], references: [id], onDelete: Cascade)
 }
 
 enum Status {
