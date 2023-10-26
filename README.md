@@ -22,7 +22,7 @@ git clone https://github.com/your-username/campo-libre.git
 cd campo-libre
 ```
 
-3. nstall project dependencies:
+3. Install project dependencies:
 
 ```bash
 yarn install
