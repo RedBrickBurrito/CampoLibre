@@ -61,3 +61,9 @@ The project relies on various npm packages. Here are some of the key dependencie
 * Playwright for end-to-end testing.
 
 And many more. You can find the complete list in the package.json file.
+
+# Sequence Diagrams
+
+1. Products list fetching diagram:
+   
+![architecture_overview drawio](https://github.com/RedBrickBurrito/CampoLibre/assets/20271819/5a3e851d-9b00-443d-8636-9d2e70431825)
