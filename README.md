@@ -67,3 +67,7 @@ And many more. You can find the complete list in the package.json file.
 1. Products list fetching diagram:
    
 ![architecture_overview drawio](https://github.com/RedBrickBurrito/CampoLibre/assets/20271819/5a3e851d-9b00-443d-8636-9d2e70431825)
+
+2. Checkout diagram:
+
+![architecture_overview drawio(1)](https://github.com/RedBrickBurrito/CampoLibre/assets/20271819/c08ece7d-3a5b-460c-9ee6-2c1c7ebe13c9)
