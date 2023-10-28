@@ -29,13 +29,13 @@ yarn install
 ```
 
 4. Create .env file, with the following structure:
-   DATABASE_URL="mongodb+srv://eduardoalmanza:AKzSjVwqe7Xf941g@campo-libre-cluster.gcbixg7.mongodb.net/prisma-mongo?retryWrites=true&w=majority"
-   GOOGLE_ID=""
-   GOOGLE_SECRET=""
-   SECRET=""
-   BASE_URL="http://localhost:3000"
-   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=''
-   STRIPE_SECRET_KEY=''
+   DATABASE_URL="mongodb+srv://eduardoalmanza:AKzSjVwqe7Xf941g@campo-libre-cluster.gcbixg7.mongodb.net/prisma-mongo?retryWrites=true&w=majority" \
+   GOOGLE_ID="" \
+   GOOGLE_SECRET="" \
+   SECRET="" \
+   BASE_URL="http://localhost:3000" \
+   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY='' \
+   STRIPE_SECRET_KEY='' \
 
 # Available Scripts
 
