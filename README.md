@@ -70,4 +70,5 @@ And many more. You can find the complete list in the package.json file.
 
 2. Checkout diagram:
 
-![architecture_overview drawio(1)](https://github.com/RedBrickBurrito/CampoLibre/assets/20271819/c08ece7d-3a5b-460c-9ee6-2c1c7ebe13c9)
+![architecture_overview drawio(2)](https://github.com/RedBrickBurrito/CampoLibre/assets/20271819/e6a49726-82a4-4f45-9432-267ec250f5c3)
+
